@@ -19,20 +19,20 @@ export function AboutPage() {
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center">
           <RevealBlock className="lg:col-span-6" blur>
             <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
-              About TermiCore
+              About TermiCore · State-of-the-Art Production
             </p>
             <h1 className="mt-2 font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#101D2B] text-balance">
-              Powering Global Connections
+              Precision Engineered in Our Advanced Manufacturing Facility
             </h1>
             <p className="mt-4 text-base leading-relaxed text-[#475569]">
-              TermiCore engineers and manufactures precision DIN-rail terminal blocks and electrical distribution systems for industrial automation, switchgear builders, renewable energy, and process industries.
+              TermiCore operates a fully integrated precision manufacturing plant equipped with automated stamping presses, high-speed polyamide injection molding, and optical metrology laboratories to ensure absolute electrical reliability.
             </p>
             <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold text-[#101D2B]">
-              <span>Global Reach</span>
+              <span>ISO 9001:2015 Certified</span>
               <span aria-hidden="true" className="text-[#CBD5E1]">/</span>
-              <span>Vertical Integration</span>
+              <span>Automated Stamping &amp; Molding</span>
               <span aria-hidden="true" className="text-[#CBD5E1]">/</span>
-              <span>R&amp;D Focused</span>
+              <span>100% Dielectric Tested</span>
             </div>
           </RevealBlock>
 
@@ -40,15 +40,94 @@ export function AboutPage() {
             direction="left"
             immediate
             parallax
-            className="lg:col-span-6 rounded-lg border border-[#DCE2E8] bg-[#EEF2F6] aspect-[16/9] shadow-xs"
+            className="lg:col-span-6 rounded-lg border border-[#DCE2E8] bg-[#EEF2F6] aspect-[16/10] shadow-xs"
           >
             <EngineeringImage
               src={IMAGES.controlCabinet}
-              alt="Precision control cabinet built with TermiCore DIN rail terminal blocks"
-              fallbackTitle="TermiCore State-of-the-Art Manufacturing"
+              alt="TermiCore automated manufacturing facility and control assembly plant"
+              fallbackTitle="TermiCore Production Facility Floor"
               className="h-full w-full object-cover"
             />
           </ImageReveal>
+        </div>
+      </section>
+
+      {/* Real Factory Showcase Section */}
+      <section className="bg-white py-16 lg:py-24 border-b border-[#DCE2E8]">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
+          <RevealBlock className="max-w-3xl mb-12">
+            <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
+              Factory Floor &amp; Laboratory Infrastructure
+            </p>
+            <h2 className="mt-2 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-[#101D2B]">
+              Inside Our Vertically Integrated Plant
+            </h2>
+            <p className="mt-3 text-base text-[#475569]">
+              From raw electrolytic copper coil to finished UL-recognized terminal blocks, every production cell is calibrated for zero-defect output.
+            </p>
+          </RevealBlock>
+
+          <StaggerGrid className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3" stagger={0.1} y={24}>
+            <div data-stagger-item className="flex">
+              <GlowCard variant="elevated" className="w-full p-6">
+                <div className="overflow-hidden rounded-md border border-[#DCE2E8] bg-[#EEF2F6] aspect-[16/10] mb-4">
+                  <EngineeringImage
+                    src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80"
+                    alt="Automated metal stamping and pressing machine on factory floor"
+                    fallbackTitle="Automated Metal Stamping Cell"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="font-mono text-xs font-semibold text-[#0F766E]">Cell 01 · Stamping</div>
+                <h3 className="mt-1 font-display text-lg font-bold text-[#101D2B]">
+                  High-Precision Copper Stamping
+                </h3>
+                <p className="mt-2 text-xs leading-relaxed text-[#475569]">
+                  Multi-stage progressive dies stamp electrolytic copper into current bars with exact tolerance margins, ensuring low electrical resistance and secure wire clamping.
+                </p>
+              </GlowCard>
+            </div>
+
+            <div data-stagger-item className="flex">
+              <GlowCard variant="elevated" className="w-full p-6">
+                <div className="overflow-hidden rounded-md border border-[#DCE2E8] bg-[#EEF2F6] aspect-[16/10] mb-4">
+                  <EngineeringImage
+                    src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80"
+                    alt="Polyamide injection molding machinery and quality inspection"
+                    fallbackTitle="Polyamide Injection Molding"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="font-mono text-xs font-semibold text-[#0F766E]">Cell 02 · Molding</div>
+                <h3 className="mt-1 font-display text-lg font-bold text-[#101D2B]">
+                  UL 94 V-0 Polyamide Molding
+                </h3>
+                <p className="mt-2 text-xs leading-relaxed text-[#475569]">
+                  State-of-the-art injection molding presses process self-extinguishing PA 6.6 and high-temp LCP resins into precision housing blocks with flawless dielectric insulation.
+                </p>
+              </GlowCard>
+            </div>
+
+            <div data-stagger-item className="flex">
+              <GlowCard variant="elevated" className="w-full p-6">
+                <div className="overflow-hidden rounded-md border border-[#DCE2E8] bg-[#EEF2F6] aspect-[16/10] mb-4">
+                  <EngineeringImage
+                    src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=1200&q=80"
+                    alt="Quality control laboratory and electrical testing bench"
+                    fallbackTitle="Dielectric Testing Laboratory"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="font-mono text-xs font-semibold text-[#0F766E]">Cell 03 · Quality Lab</div>
+                <h3 className="mt-1 font-display text-lg font-bold text-[#101D2B]">
+                  Dielectric &amp; Pull-Out Testing
+                </h3>
+                <p className="mt-2 text-xs leading-relaxed text-[#475569]">
+                  Every production batch undergoes 8 kV impulse withstand voltage testing and mechanical wire pull-out verification to guarantee compliance with UL 1059 and IEC 60947-7-1.
+                </p>
+              </GlowCard>
+            </div>
+          </StaggerGrid>
         </div>
       </section>
 

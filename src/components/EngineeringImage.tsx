@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Cpu } from 'lucide-react';
+import { Layers } from 'lucide-react';
 import { resolveAssetUrl } from '../data/termicoreData';
 
 interface EngineeringImageProps {
@@ -28,12 +28,12 @@ export function EngineeringImage({
         aria-label={alt}
         className={`flex flex-col items-center justify-center p-6 text-center ${
           darkFallback
-            ? 'bg-[#151D26] text-slate-300 border border-slate-700'
-            : 'bg-[#EEF2F6] text-slate-600 border border-slate-200'
+            ? 'bg-[#101D2B] text-slate-300 border border-slate-800'
+            : 'bg-[#F8FAFC] text-slate-700 border border-slate-200'
         } ${className}`}
       >
-        <Cpu className="h-8 w-8 mb-2 text-[#0F766E] opacity-85" strokeWidth={1.5} />
-        <span className="text-xs font-medium tracking-tight">
+        <Layers className="h-7 w-7 mb-2 text-[#0F766E]" strokeWidth={1.5} />
+        <span className="text-xs font-semibold tracking-tight">
           {fallbackTitle || alt}
         </span>
       </div>
@@ -41,15 +41,17 @@ export function EngineeringImage({
   }
 
   return (
-    <img
-      src={resolveAssetUrl(src)}
-      alt={alt}
-      referrerPolicy="no-referrer"
-      loading={priority ? 'eager' : 'lazy'}
-      decoding="async"
-      fetchPriority={priority ? 'high' : 'auto'}
-      onError={() => setFailed(true)}
-      className={className}
-    />
+    <div className={`relative overflow-hidden bg-[#F8FAFC] flex items-center justify-center ${className}`}>
+      <img
+        src={resolveAssetUrl(src)}
+        alt={alt}
+        referrerPolicy="no-referrer"
+        loading={priority ? 'eager' : 'lazy'}
+        decoding="async"
+        fetchPriority={priority ? 'high' : 'auto'}
+        onError={() => setFailed(true)}
+        className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.02]"
+      />
+    </div>
   );
 }

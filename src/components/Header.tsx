@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { TermiCoreLogo } from './TermiCoreLogo';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -204,14 +205,7 @@ export function Header() {
           className="group flex items-center gap-2.5 sm:gap-3 text-left whitespace-nowrap shrink-0 cursor-pointer rounded"
           aria-label="TermiCore Home"
         >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#DCE2E8] bg-white p-0.5 shadow-2xs transition-transform duration-300 group-hover:scale-105 group-hover:border-[#0F766E]/40">
-            <img
-              src={resolveAssetUrl(IMAGES.logo)}
-              alt="TermiCore logo"
-              referrerPolicy="no-referrer"
-              className="h-full w-full object-contain"
-            />
-          </span>
+          <TermiCoreLogo className="h-9 w-9 shrink-0 shadow-2xs transition-transform duration-300 group-hover:scale-105" />
           <span className="font-display text-base sm:text-lg font-extrabold tracking-tight text-[#101D2B]">
             TermiCore
           </span>

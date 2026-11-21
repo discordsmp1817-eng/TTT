@@ -54,7 +54,7 @@ export function RevealBlock({
   children,
   className = '',
   delay = 0,
-  y = 28,
+  y = 36,
   blur = false,
 }: RevealBlockProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -70,20 +70,20 @@ export function RevealBlock({
         {
           y,
           opacity: 0,
-          filter: blur ? 'blur(5px)' : 'blur(0px)',
+          filter: blur ? 'blur(6px)' : 'blur(0px)',
         },
         {
           y: 0,
           opacity: 1,
           filter: 'blur(0px)',
-          duration: 0.72,
+          duration: 0.82,
           delay,
           ease: 'power3.out',
           clearProps: 'transform,opacity,filter',
           scrollTrigger: {
             trigger: el,
-            start: 'top 90%',
-            once: true,
+            start: 'top 98%',
+            toggleActions: 'play none none none',
           },
         }
       );
@@ -116,9 +116,9 @@ export function StaggerGrid({
   children,
   className = '',
   itemSelector = '[data-stagger-item]',
-  stagger = 0.09,
-  y = 28,
-  scaleFrom = 0.96,
+  stagger = 0.08,
+  y = 36,
+  scaleFrom = 0.95,
 }: StaggerGridProps) {
   const ref = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
@@ -142,14 +142,14 @@ export function StaggerGrid({
           y: 0,
           opacity: 1,
           scale: 1,
-          duration: 0.68,
+          duration: 0.75,
           stagger,
           ease: 'power3.out',
           clearProps: 'transform,opacity',
           scrollTrigger: {
             trigger: el,
-            start: 'top 90%',
-            once: true,
+            start: 'top 98%',
+            toggleActions: 'play none none none',
           },
         }
       );

@@ -1,4 +1,5 @@
 import { Mail, Phone, MapPin, Clock, ArrowRight, X } from 'lucide-react';
+import { TermiCoreLogo } from './TermiCoreLogo';
 import { AnimatePresence, motion } from 'motion/react';
 import {
   CONTACT_INFO,
@@ -32,14 +33,7 @@ export function Footer() {
               onClick={() => handleLink('/')}
               className="flex items-center gap-3 text-left cursor-pointer rounded"
             >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-700 bg-white p-0.5 shadow-xs">
-                <img
-                  src={resolveAssetUrl(IMAGES.logo)}
-                  alt="TermiCore logo"
-                  referrerPolicy="no-referrer"
-                  className="h-full w-full object-contain"
-                />
-              </span>
+              <TermiCoreLogo className="h-9 w-9 shrink-0 shadow-xs" />
               <span className="font-display text-lg font-extrabold tracking-tight text-white">
                 TermiCore
               </span>

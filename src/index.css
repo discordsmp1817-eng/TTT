@@ -5,49 +5,50 @@
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --color-alabaster: #F5F7F9;
-  --color-mist: #EEF2F6;
+  --color-alabaster: #F4F6F8;
+  --color-mist: #EAEFF4;
   --color-card: #FFFFFF;
-  --color-carbon: #101D2B;
-  --color-graphite: #202B36;
-  --color-slate-ink: #475569;
-  --color-steel: #657382;
-  --color-silver: #DCE2E8;
+  --color-carbon: #0D121B;
+  --color-graphite: #182230;
+  --color-slate-ink: #334155;
+  --color-steel: #64748B;
+  --color-silver: #CBD5E1;
   --color-teal-accent: #0F766E;
   --color-teal-bright: #0D9488;
+  --color-furrow-clay: #C2A687;
 }
 
 :root {
-  --bg-primary: #F5F7F9;
-  --bg-secondary: #EEF2F6;
+  --bg-primary: #F4F6F8;
+  --bg-secondary: #EAEFF4;
   --bg-elevated: #FFFFFF;
-  --text-primary: #101D2B;
-  --text-secondary: #475569;
+  --text-primary: #0D121B;
+  --text-secondary: #334155;
   --accent-primary: #0F766E;
   --accent-hover: #0D9488;
-  --steel-grey: #657382;
-  --border-subtle: #DCE2E8;
+  --steel-grey: #64748B;
+  --border-subtle: #CBD5E1;
   --border-accent-hover: rgba(15, 118, 110, 0.45);
 }
 
 @layer base {
   html {
     font-family: var(--font-sans);
-    color: #101D2B;
-    background-color: #F5F7F9;
+    color: #0D121B;
+    background-color: #F4F6F8;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
 
   body {
-    background-color: #F5F7F9;
-    color: #101D2B;
+    background-color: #F4F6F8;
+    color: #0D121B;
     overflow-x: clip;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
   }
 
   *:focus-visible {
@@ -56,19 +57,19 @@
   }
 }
 
-/* Precision architectural drafting grid for industrial hero & section banners */
-.bg-engineering-grid {
+/* Furrow theme textured linear grooves and architectural grid */
+.bg-furrow-grooves {
   background-image:
-    linear-gradient(to right, rgba(16, 29, 43, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(16, 29, 43, 0.035) 1px, transparent 1px);
-  background-size: 32px 32px;
+    linear-gradient(to right, rgba(13, 18, 27, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(13, 18, 27, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
-.bg-engineering-grid-dark {
+.bg-furrow-grooves-dark {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
-  background-size: 32px 32px;
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 html.lenis,
