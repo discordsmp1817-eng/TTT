@@ -97,7 +97,7 @@ export default function App() {
   };
 
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion="never">
       <AppProvider>
         <div className="min-h-screen flex flex-col bg-[#F5F7F9] text-[#101D2B] relative overflow-x-clip">
           {isLoading && <InitialLoader onComplete={handleLoaderComplete} />}

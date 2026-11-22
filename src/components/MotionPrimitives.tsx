@@ -15,19 +15,7 @@ export type { GridDirectionPattern, ScrollRevealDirection };
 export const INDUSTRIAL_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 export function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  });
-
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const onChange = () => setReduced(mq.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
-  }, []);
-
-  return reduced;
+  return false;
 }
 
 export function useIsTouchDevice(): boolean {
