@@ -45,70 +45,88 @@ export function HomePage() {
     const el = heroRef.current;
     if (!el || reducedMotion) return;
 
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    let ctx: gsap.Context | null = null;
 
-      tl.from('[data-hero-kicker]', {
-        y: 14,
-        opacity: 0,
-        duration: 0.55,
-        clearProps: 'transform,opacity',
-      })
-        .from(
-          '[data-hero-word]',
-          {
-            yPercent: 108,
-            opacity: 0,
-            duration: 0.72,
-            stagger: 0.09,
-            clearProps: 'transform,opacity',
-          },
-          '-=0.35'
-        )
-        .from(
-          '[data-hero-sub]',
-          {
-            y: 16,
-            opacity: 0,
-            filter: 'blur(4px)',
-            duration: 0.6,
-            clearProps: 'transform,opacity,filter',
-          },
-          '-=0.45'
-        )
-        .from(
-          '[data-hero-cta]',
-          {
-            y: 14,
-            opacity: 0,
-            duration: 0.5,
-            stagger: 0.08,
-            clearProps: 'transform,opacity',
-          },
-          '-=0.38'
-        )
-        .from(
-          '[data-hero-std]',
-          {
-            y: 10,
-            opacity: 0,
-            duration: 0.45,
-            stagger: 0.05,
-            clearProps: 'transform,opacity',
-          },
-          '-=0.3'
-        );
+    const runHeroIntro = () => {
+      if (ctx) return;
+      ctx = gsap.context(() => {
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      gsap.to('[data-hero-float]', {
-        y: -4,
-        duration: 2.8,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      });
-    }, heroRef);
+        tl.from('[data-hero-kicker]', {
+          y: 16,
+          opacity: 0,
+          duration: 0.65,
+          clearProps: 'transform,opacity',
+        })
+          .from(
+            '[data-hero-word]',
+            {
+              yPercent: 108,
+              opacity: 0,
+              duration: 0.8,
+              stagger: 0.1,
+              clearProps: 'transform,opacity',
+            },
+            '-=0.35'
+          )
+          .from(
+            '[data-hero-sub]',
+            {
+              y: 18,
+              opacity: 0,
+              filter: 'blur(4px)',
+              duration: 0.7,
+              clearProps: 'transform,opacity,filter',
+            },
+            '-=0.45'
+          )
+          .from(
+            '[data-hero-cta]',
+            {
+              y: 16,
+              opacity: 0,
+              duration: 0.6,
+              stagger: 0.09,
+              clearProps: 'transform,opacity',
+            },
+            '-=0.38'
+          )
+          .from(
+            '[data-hero-std]',
+            {
+              y: 12,
+              opacity: 0,
+              duration: 0.5,
+              stagger: 0.06,
+              clearProps: 'transform,opacity',
+            },
+            '-=0.3'
+          );
 
-    return () => ctx.revert();
+        gsap.to('[data-hero-float]', {
+          y: -4,
+          duration: 2.8,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        });
+      }, heroRef);
+    };
+
+    const win = window as Window & { __TERMICORE_LOADER_ACTIVE__?: boolean };
+    if (win.__TERMICORE_LOADER_ACTIVE__) {
+      const onLoaderDone = () => runHeroIntro();
+      window.addEventListener('termicore:loader-done', onLoaderDone, { once: true });
+      return () => {
+        window.removeEventListener('termicore:loader-done', onLoaderDone);
+        ctx?.revert();
+      };
+    }
+
+    runHeroIntro();
+    return () => {
+      ctx?.revert();
+    };
   }, [reducedMotion]);
 
   const headlineWords = ['Terminal', 'Block', 'Connectors'];
@@ -133,7 +151,11 @@ export function HomePage() {
         <div className="relative mx-auto max-w-[1280px] px-4 sm:px-6">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-stretch">
             {/* Left Light Editorial Column */}
-            <div className="lg:col-span-6 flex flex-col justify-between rounded-lg border border-[#DCE2E8] bg-white p-7 sm:p-10 shadow-[0_12px_36px_rgba(16,29,43,0.05)]">
+            <RevealBlock
+              direction="left"
+              distance={96}
+              className="lg:col-span-6 flex flex-col justify-between rounded-lg border border-[#DCE2E8] bg-white p-7 sm:p-10 shadow-[0_12px_36px_rgba(16,29,43,0.05)]"
+            >
               <div>
                 <p
                   data-hero-kicker
@@ -205,13 +227,14 @@ export function HomePage() {
                   <span data-hero-std>CE &amp; RoHS</span>
                 </div>
               </div>
-            </div>
+            </RevealBlock>
 
             {/* Right Light Engineering Spec Card */}
-            <GlowCard
-              variant="elevated"
-              className="lg:col-span-6 p-6 sm:p-8 border-[#DCE2E8]"
-            >
+            <RevealBlock direction="right" distance={96} delay={0.1} className="lg:col-span-6 flex">
+              <GlowCard
+                variant="elevated"
+                className="w-full p-6 sm:p-8 border-[#DCE2E8]"
+              >
               <div className="relative flex flex-col justify-between h-full">
                 <ImageReveal
                   direction="right"
@@ -247,10 +270,17 @@ export function HomePage() {
                   </div>
 
                   {/* 4-Cell Tabular Spec Strip */}
-                  <dl className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+                  <StaggerGrid
+                    pattern="columns"
+                    columns={4}
+                    distance={28}
+                    stagger={0.07}
+                    className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3.5"
+                  >
                     {HERO_METRICS.map((metric, idx) => (
                       <div
                         key={metric.label}
+                        data-stagger-item
                         className="rounded-md border border-[#DCE2E8] bg-[#F5F7F9] p-3.5 transition-colors duration-200 hover:border-[#0F766E]/50 hover:bg-white"
                       >
                         <dt className="text-[11px] font-medium text-[#657382]">
@@ -268,10 +298,11 @@ export function HomePage() {
                         </dd>
                       </div>
                     ))}
-                  </dl>
+                  </StaggerGrid>
                 </div>
               </div>
-            </GlowCard>
+              </GlowCard>
+            </RevealBlock>
           </div>
         </div>
       </section>
@@ -282,8 +313,8 @@ export function HomePage() {
       {/* 3. UNIFIED INDUSTRIAL APPLICATIONS SHOWCASE */}
       <section id="applications" className="bg-white text-[#0F172A] py-16 lg:py-24">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
-          <RevealBlock className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
-            <div className="max-w-2xl">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+            <RevealBlock direction="left" distance={90} className="max-w-2xl">
               <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
                 Industrial Applications
               </p>
@@ -293,9 +324,13 @@ export function HomePage() {
               <p className="mt-3 text-base text-[#475569]">
                 From industrial automation to renewable energy, our terminal block connectors are specified across demanding electrical infrastructure.
               </p>
-            </div>
+            </RevealBlock>
 
-            <div className="flex flex-wrap gap-1.5 rounded-lg border border-slate-200 bg-[#EEF2F6] p-1.5">
+            <RevealBlock
+              direction="right"
+              distance={90}
+              className="flex flex-wrap gap-1.5 rounded-lg border border-slate-200 bg-[#EEF2F6] p-1.5"
+            >
               {APPLICATION_SECTORS.map((sector) => {
                 const isActive = activeSector.id === sector.id;
                 return (
@@ -320,10 +355,11 @@ export function HomePage() {
                   </button>
                 );
               })}
-            </div>
-          </RevealBlock>
+            </RevealBlock>
+          </div>
 
-          <AnimatePresence mode="wait">
+          <RevealBlock direction="down" distance={84}>
+            <AnimatePresence mode="wait">
             <motion.div
               key={activeSector.id}
               initial={{ opacity: 0, y: 10 }}
@@ -398,6 +434,7 @@ export function HomePage() {
               </GlowCard>
             </motion.div>
           </AnimatePresence>
+          </RevealBlock>
         </div>
       </section>
 
@@ -408,7 +445,7 @@ export function HomePage() {
       >
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
-            <RevealBlock className="lg:col-span-5" blur>
+            <RevealBlock direction="left" distance={92} className="lg:col-span-5" blur>
               <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
                 Our Commitment
               </p>
@@ -447,8 +484,10 @@ export function HomePage() {
 
             <StaggerGrid
               className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4"
-              stagger={0.07}
-              y={20}
+              pattern="quad"
+              columns={2}
+              stagger={0.11}
+              distance={88}
             >
               {CERTIFICATIONS.map((cert) => (
                 <div key={cert.id} data-stagger-item className="flex">
@@ -483,7 +522,7 @@ export function HomePage() {
       {/* 5. WHY CHOOSE TERMICORE + CONVERSION BAND */}
       <section className="bg-[#F5F7F9] py-16 lg:py-24">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
-          <RevealBlock className="max-w-2xl mb-10">
+          <RevealBlock direction="up" distance={78} className="max-w-2xl mb-10">
             <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
               Why Choose TermiCore
             </p>
@@ -494,8 +533,10 @@ export function HomePage() {
 
           <StaggerGrid
             className="grid grid-cols-1 gap-px bg-[#DCE2E8] border border-[#DCE2E8] rounded-lg overflow-hidden sm:grid-cols-2 lg:grid-cols-4"
-            stagger={0.07}
-            y={18}
+            pattern="columns"
+            columns={4}
+            stagger={0.11}
+            distance={84}
           >
             {WHY_CHOOSE_PILLARS.map((pillar) => (
               <div
@@ -517,7 +558,7 @@ export function HomePage() {
           </StaggerGrid>
 
           {/* Conversion CTA Band — Deep Navy Architectural Contrast */}
-          <RevealBlock className="mt-12">
+          <RevealBlock direction="down" distance={84} className="mt-12">
             <GlowCard
               variant="dark"
               className="bg-engineering-grid-dark px-6 py-10 sm:px-10 sm:py-12"

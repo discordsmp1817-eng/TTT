@@ -25,7 +25,8 @@ import {
   buildModelCircuitSvgMarkup,
 } from '../utils/modelGraphics';
 import { downloadModelPdfDatasheet } from '../utils/pdfDatasheet';
-import { INDUSTRIAL_EASE, RevealBlock } from '../components/MotionPrimitives';
+import { getGridItemDirection } from '../utils/scrollReveal';
+import { INDUSTRIAL_EASE, RevealBlock, StaggerGrid } from '../components/MotionPrimitives';
 
 interface ModelDetailPageProps {
   sku: ProductSku;
@@ -192,8 +193,8 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
             </nav>
           </div>
 
-          <RevealBlock className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-stretch rounded-xl border border-[#DCE2E8] bg-white p-6 sm:p-8 shadow-[0_12px_36px_rgba(16,29,43,0.05)]">
-            <div className="lg:col-span-5 flex flex-col justify-between rounded-lg border border-[#EEF2F6] bg-[#FAFBFD] p-4">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-stretch rounded-xl border border-[#DCE2E8] bg-white p-6 sm:p-8 shadow-[0_12px_36px_rgba(16,29,43,0.05)]">
+            <RevealBlock direction="left" distance={56} className="lg:col-span-5 flex flex-col justify-between rounded-lg border border-[#EEF2F6] bg-[#FAFBFD] p-4">
               <div className="relative overflow-hidden rounded-md bg-white border border-[#DCE2E8] aspect-[4/3] flex items-center justify-center">
                 {currentSlide.isProductPhoto ? (
                   <EngineeringImage
@@ -266,9 +267,9 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
                   {sku.approvals.join(' · ')}
                 </span>
               </div>
-            </div>
+            </RevealBlock>
 
-            <div className="lg:col-span-7 flex flex-col justify-between">
+            <RevealBlock direction="right" distance={56} delay={0.08} className="lg:col-span-7 flex flex-col justify-between">
               <div>
                 <div className="font-mono text-xs font-semibold text-[#0F766E]">
                   Part No. {sku.model} · {category.classification}
@@ -358,8 +359,8 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
                   <span>Request STEP CAD / Sample</span>
                 </button>
               </div>
-            </div>
-          </RevealBlock>
+            </RevealBlock>
+          </div>
         </div>
       </section>
 
@@ -427,14 +428,20 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
                   transition={{ duration: 0.18, ease: INDUSTRIAL_EASE }}
                   className="mt-8 space-y-8"
                 >
-                  {sections.map((sec) => {
+                  {sections.map((sec, secIdx) => {
                     const isOpen = expandedSections[sec.id] ?? true;
+                    const secDirection = getGridItemDirection(secIdx, 'quad');
                     return (
-                      <div
+                      <RevealBlock
                         key={sec.id}
-                        id={`spec-sec-${sec.id}`}
-                        className="scroll-mt-24"
+                        direction={secDirection}
+                        distance={46}
+                        duration={0.85}
                       >
+                        <div
+                          id={`spec-sec-${sec.id}`}
+                          className="scroll-mt-24"
+                        >
                         <button
                           type="button"
                           aria-expanded={isOpen}
@@ -477,7 +484,8 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
                             </table>
                           </div>
                         )}
-                      </div>
+                        </div>
+                      </RevealBlock>
                     );
                   })}
                 </motion.div>
@@ -492,7 +500,7 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
                   transition={{ duration: 0.18, ease: INDUSTRIAL_EASE }}
                   className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12"
                 >
-                  <div className="lg:col-span-7 rounded-lg border border-[#DCE2E8] bg-[#FAFBFD] p-5 sm:p-6">
+                  <RevealBlock direction="left" distance={48} className="lg:col-span-7 rounded-lg border border-[#DCE2E8] bg-[#FAFBFD] p-5 sm:p-6">
                     <div className="flex items-center justify-between gap-3 mb-4">
                       <div>
                         <p className="font-mono text-[11px] font-semibold text-[#0F766E]">
@@ -530,9 +538,9 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
                         />
                       </div>
                     </div>
-                  </div>
+                  </RevealBlock>
 
-                  <div className="lg:col-span-5 space-y-4">
+                  <RevealBlock direction="right" distance={48} className="lg:col-span-5 space-y-4">
                     <h3 className="font-display text-lg font-bold text-[#101D2B]">
                       Mechanical Footprint Summary
                     </h3>
@@ -591,7 +599,7 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
                       <FileText className="h-4 w-4" />
                       <span>Request 3D STEP / DXF CAD Package</span>
                     </button>
-                  </div>
+                  </RevealBlock>
                 </motion.div>
               )}
 
@@ -650,7 +658,13 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  <StaggerGrid
+                    pattern="columns"
+                    columns={3}
+                    stagger={0.08}
+                    distance={48}
+                    className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+                  >
                     {compatibleAccessories.map((acc) => {
                       const accInRfq = rfqItems.some((item) => item.id === acc.partNumber);
                       const necessityBadge =
@@ -662,6 +676,7 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
                       return (
                         <div
                           key={acc.id}
+                          data-stagger-item
                           className="flex flex-col justify-between rounded-lg border border-[#DCE2E8] bg-[#FAFBFD] p-5"
                         >
                           <div>
@@ -734,7 +749,7 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
                         </div>
                       );
                     })}
-                  </div>
+                  </StaggerGrid>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -746,7 +761,7 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
       {siblingModels.length > 0 && (
         <section className="bg-white py-12 lg:py-16">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
-            <div className="flex items-center justify-between gap-4 mb-6">
+            <RevealBlock direction="up" distance={36} className="flex items-center justify-between gap-4 mb-6">
               <div>
                 <p className="font-mono text-xs font-semibold text-[#0F766E]">
                   More in {category.seriesCode} Series
@@ -763,12 +778,19 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
                 <span>All {category.skus.length} {category.seriesCode} Models</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </button>
-            </div>
+            </RevealBlock>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <StaggerGrid
+              pattern="columns"
+              columns={4}
+              stagger={0.08}
+              distance={46}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+            >
               {siblingModels.map((sib) => (
                 <button
                   key={sib.model}
+                  data-stagger-item
                   type="button"
                   onClick={() => navigate(getModelRoute(sib.model))}
                   className="group flex flex-col justify-between rounded-lg border border-[#DCE2E8] bg-[#F8FAFC] p-4 text-left hover:border-[#0F766E] hover:bg-white transition-colors cursor-pointer"
@@ -797,7 +819,7 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
                   </div>
                 </button>
               ))}
-            </div>
+            </StaggerGrid>
           </div>
         </section>
       )}

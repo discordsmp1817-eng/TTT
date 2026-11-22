@@ -1,8 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import {
+  getDirectionOffset,
+  getGridItemDirection,
+  GridDirectionPattern,
+  ScrollRevealDirection,
+} from '../utils/scrollReveal';
 
 gsap.registerPlugin(ScrollTrigger);
+
+export type { GridDirectionPattern, ScrollRevealDirection };
 
 export const INDUSTRIAL_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
@@ -39,12 +47,207 @@ export function useIsTouchDevice(): boolean {
 }
 
 /* -------------------------------------------------------------------------- */
-/* 1. GSAP Scroll-Triggered Section & Staggered Content Reveal                */
+/* Shared Bi-Directional ScrollTrigger Reveal Engine (Scroll Down & Up)       */
+/* -------------------------------------------------------------------------- */
+
+export interface BiDirectionalRevealOptions {
+  direction?: ScrollRevealDirection;
+  distance?: number;
+  duration?: number;
+  delay?: number;
+  scaleFrom?: number;
+  blur?: boolean;
+  start?: string;
+  end?: string;
+}
+
+function getEffectiveDistance(direction: ScrollRevealDirection, distance: number): number {
+  if (typeof window !== 'undefined' && window.innerWidth < 640 && (direction === 'left' || direction === 'right')) {
+    return Math.min(distance, 42);
+  }
+  return distance;
+}
+
+function isInitialLoaderActive(): boolean {
+  if (typeof window === 'undefined') return false;
+  return Boolean((window as Window & { __TERMICORE_LOADER_ACTIVE__?: boolean }).__TERMICORE_LOADER_ACTIVE__);
+}
+
+export function attachBiDirectionalReveal(
+  el: HTMLElement,
+  options: BiDirectionalRevealOptions = {}
+): () => void {
+  const {
+    direction = 'down',
+    distance = 92,
+    duration = 0.96,
+    delay = 0,
+    scaleFrom = 1,
+    blur = false,
+    start = 'top 86%',
+    end = 'bottom 18%',
+  } = options;
+
+  const effectiveDistance = getEffectiveDistance(direction, distance);
+  const { x, y } = getDirectionOffset(direction, effectiveDistance);
+  const hiddenFilter = blur ? 'blur(6px)' : 'blur(0px)';
+
+  let currentState: 'shown' | 'hidden' = 'hidden';
+  let settleTimer: number | null = null;
+
+  el.setAttribute('data-scroll-reveal', direction);
+  el.setAttribute('data-reveal-state', 'hidden');
+
+  const applyHiddenStyles = () => {
+    gsap.killTweensOf(el);
+    gsap.set(el, {
+      x,
+      y,
+      scale: scaleFrom,
+      opacity: 0,
+      filter: hiddenFilter,
+    });
+  };
+
+  const setHidden = () => {
+    if (currentState === 'hidden') return;
+    currentState = 'hidden';
+    el.setAttribute('data-reveal-state', 'hidden');
+    applyHiddenStyles();
+  };
+
+  // Initialize hidden position before animating in
+  applyHiddenStyles();
+
+  const playReveal = (customDelay = delay) => {
+    if (isInitialLoaderActive()) return;
+    if (currentState === 'shown') return;
+    currentState = 'shown';
+    el.setAttribute('data-reveal-state', 'shown');
+    gsap.killTweensOf(el);
+    gsap.to(el, {
+      x: 0,
+      y: 0,
+      scale: 1,
+      opacity: 1,
+      filter: 'blur(0px)',
+      duration,
+      delay: customDelay,
+      ease: 'power2.out',
+      overwrite: 'auto',
+      onComplete: () => {
+        if (currentState === 'shown') {
+          gsap.set(el, { clearProps: 'transform,filter' });
+        }
+      },
+    });
+  };
+
+  const getLayoutVerticalBounds = () => {
+    const rect = el.getBoundingClientRect();
+    const currentY = Number(gsap.getProperty(el, 'y')) || 0;
+    return {
+      layoutTop: rect.top - currentY,
+      layoutBottom: rect.bottom - currentY,
+    };
+  };
+
+  const checkEdgeVisibility = (allowEdgeMargin = false) => {
+    if (isInitialLoaderActive()) return;
+    const vh = window.innerHeight || 900;
+    const { layoutTop, layoutBottom } = getLayoutVerticalBounds();
+    const docEl = document.documentElement;
+    const atTop = window.scrollY <= 6;
+    const atBottom = window.scrollY + vh >= docEl.scrollHeight - 8;
+
+    const topCutoff = allowEdgeMargin ? vh * 0.98 : vh * 0.86;
+    const bottomCutoff = allowEdgeMargin ? vh * 0.02 : vh * 0.16;
+    const inRevealBand = layoutTop < topCutoff && layoutBottom > bottomCutoff;
+    const visibleAtEdge =
+      (atTop && layoutTop < vh && layoutBottom > 0) ||
+      (atBottom && layoutTop < vh && layoutBottom > 0);
+
+    if (inRevealBand || visibleAtEdge) {
+      playReveal(delay);
+    } else if (layoutBottom <= -12 || layoutTop >= vh + 12) {
+      setHidden();
+    }
+  };
+
+  const onScroll = () => {
+    checkEdgeVisibility(false);
+    if (settleTimer !== null) {
+      window.clearTimeout(settleTimer);
+    }
+    settleTimer = window.setTimeout(() => {
+      checkEdgeVisibility(true);
+    }, 200);
+  };
+
+  const revealTrigger = ScrollTrigger.create({
+    trigger: el,
+    start,
+    end,
+    onEnter: () => playReveal(delay),
+    onEnterBack: () => playReveal(delay),
+  });
+
+  // Reset only once element is 100% off-screen above or below viewport (with 12px buffer)
+  const visibilityResetTrigger = ScrollTrigger.create({
+    trigger: el,
+    start: 'top bottom+=12',
+    end: 'bottom top-=12',
+    onLeave: () => {
+      const vh = window.innerHeight || 900;
+      const docEl = document.documentElement;
+      if (window.scrollY + vh >= docEl.scrollHeight - 8) return;
+      const { layoutBottom } = getLayoutVerticalBounds();
+      if (layoutBottom <= -6) {
+        setHidden();
+      }
+    },
+    onLeaveBack: () => {
+      if (window.scrollY <= 6) return;
+      const vh = window.innerHeight || 900;
+      const { layoutTop } = getLayoutVerticalBounds();
+      if (layoutTop >= vh + 6) {
+        setHidden();
+      }
+    },
+  });
+
+  const onLoaderDone = () => {
+    ScrollTrigger.refresh();
+    checkEdgeVisibility(true);
+  };
+  window.addEventListener('termicore:loader-done', onLoaderDone);
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Evaluate initial viewport placement when loader is already finished
+  checkEdgeVisibility(true);
+
+  return () => {
+    if (settleTimer !== null) {
+      window.clearTimeout(settleTimer);
+    }
+    window.removeEventListener('termicore:loader-done', onLoaderDone);
+    window.removeEventListener('scroll', onScroll);
+    revealTrigger.kill();
+    visibilityResetTrigger.kill();
+    gsap.killTweensOf(el);
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/* 1. GSAP Bi-Directional Section & Staggered Content Reveal                  */
 /* -------------------------------------------------------------------------- */
 
 interface RevealBlockProps {
   children: React.ReactNode;
   className?: string;
+  direction?: ScrollRevealDirection;
+  distance?: number;
+  duration?: number;
   delay?: number;
   y?: number;
   blur?: boolean;
@@ -53,48 +256,42 @@ interface RevealBlockProps {
 export function RevealBlock({
   children,
   className = '',
+  direction = 'down',
+  distance,
+  duration = 0.96,
   delay = 0,
-  y = 36,
+  y,
   blur = false,
 }: RevealBlockProps) {
   const ref = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
 
+  const resolvedDistance =
+    distance !== undefined
+      ? Math.max(distance, 76)
+      : y !== undefined
+      ? Math.max(Math.abs(y), 76)
+      : 92;
+
   useEffect(() => {
     const el = ref.current;
     if (!el || reducedMotion) return;
 
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        {
-          y,
-          opacity: 0,
-          filter: blur ? 'blur(6px)' : 'blur(0px)',
-        },
-        {
-          y: 0,
-          opacity: 1,
-          filter: 'blur(0px)',
-          duration: 0.82,
-          delay,
-          ease: 'power3.out',
-          clearProps: 'transform,opacity,filter',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 98%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-    }, ref);
+    const cleanup = attachBiDirectionalReveal(el, {
+      direction,
+      distance: resolvedDistance,
+      duration,
+      delay,
+      blur,
+    });
 
     const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
     return () => {
       cancelAnimationFrame(raf);
-      ctx.revert();
+      cleanup();
+      gsap.set(el, { clearProps: 'transform,opacity,filter' });
     };
-  }, [delay, y, blur, reducedMotion]);
+  }, [direction, resolvedDistance, duration, delay, blur, reducedMotion]);
 
   return (
     <div ref={ref} className={className}>
@@ -107,7 +304,11 @@ interface StaggerGridProps {
   children: React.ReactNode;
   className?: string;
   itemSelector?: string;
+  pattern?: GridDirectionPattern;
+  columns?: 2 | 3 | 4;
   stagger?: number;
+  distance?: number;
+  duration?: number;
   y?: number;
   scaleFrom?: number;
 }
@@ -116,51 +317,60 @@ export function StaggerGrid({
   children,
   className = '',
   itemSelector = '[data-stagger-item]',
-  stagger = 0.08,
-  y = 36,
-  scaleFrom = 0.95,
+  pattern = 'quad',
+  columns = 3,
+  stagger = 0.1,
+  distance,
+  duration = 0.94,
+  y,
+  scaleFrom = 0.93,
 }: StaggerGridProps) {
   const ref = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
+  const resolvedDistance =
+    distance !== undefined
+      ? distance <= 36
+        ? distance
+        : Math.max(distance, 84)
+      : y !== undefined
+      ? Math.max(Math.abs(y), 84)
+      : 90;
 
   useEffect(() => {
     const el = ref.current;
     if (!el || reducedMotion) return;
 
-    const ctx = gsap.context(() => {
-      const items = el.querySelectorAll(itemSelector);
-      if (!items.length) return;
+    const items = Array.from(el.querySelectorAll<HTMLElement>(itemSelector));
+    if (!items.length) return;
 
-      gsap.fromTo(
-        items,
-        {
-          y,
-          opacity: 0,
-          scale: scaleFrom,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          scale: 1,
-          duration: 0.75,
-          stagger,
-          ease: 'power3.out',
-          clearProps: 'transform,opacity',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 98%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-    }, ref);
+    const cleanups = items.map((item, idx) => {
+      const dir = getGridItemDirection(idx, pattern, columns);
+      const colDelay = (idx % Math.max(1, columns)) * stagger;
+      return attachBiDirectionalReveal(item, {
+        direction: dir,
+        distance: resolvedDistance,
+        duration,
+        delay: colDelay,
+        scaleFrom,
+      });
+    });
 
     const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
     return () => {
       cancelAnimationFrame(raf);
-      ctx.revert();
+      cleanups.forEach((fn) => fn());
+      items.forEach((item) => gsap.set(item, { clearProps: 'transform,opacity,filter' }));
     };
-  }, [itemSelector, stagger, y, scaleFrom, reducedMotion]);
+  }, [
+    itemSelector,
+    pattern,
+    columns,
+    stagger,
+    resolvedDistance,
+    duration,
+    scaleFrom,
+    reducedMotion,
+  ]);
 
   return (
     <div ref={ref} className={className}>
@@ -173,7 +383,7 @@ export function StaggerGrid({
 /* 2. GSAP Clip-Mask + Scale-Down Image Reveal & Optional Parallax            */
 /* -------------------------------------------------------------------------- */
 
-export type RevealDirection = 'up' | 'left' | 'right' | 'center';
+export type RevealDirection = 'up' | 'down' | 'left' | 'right' | 'center';
 
 interface ImageRevealProps {
   children: React.ReactNode;
@@ -186,6 +396,7 @@ interface ImageRevealProps {
 
 const CLIP_INITIAL: Record<RevealDirection, string> = {
   up: 'inset(18% 0% 0% 0%)',
+  down: 'inset(0% 0% 18% 0%)',
   left: 'inset(0% 20% 0% 0%)',
   right: 'inset(0% 0% 0% 20%)',
   center: 'inset(10% 10% 10% 10%)',
@@ -210,43 +421,72 @@ export function ImageReveal({
     if (!wrap || !inner || reducedMotion) return;
 
     const ctx = gsap.context(() => {
-      const scrollCfg = immediate
-        ? undefined
-        : {
-            trigger: wrap,
-            start: 'top 90%',
-            once: true,
-          };
+      let imageShown = false;
+      const playImageIn = () => {
+        if (imageShown) return;
+        imageShown = true;
+        gsap.fromTo(
+          wrap,
+          { clipPath: CLIP_INITIAL[direction], opacity: 0.15 },
+          {
+            clipPath: 'inset(0% 0% 0% 0%)',
+            opacity: 1,
+            duration: 0.9,
+            delay,
+            ease: 'power3.out',
+            overwrite: 'auto',
+            clearProps: 'clipPath,opacity',
+          }
+        );
+        gsap.fromTo(
+          inner,
+          { scale: 1.08 },
+          {
+            scale: 1,
+            duration: 1.0,
+            delay,
+            ease: 'power3.out',
+            overwrite: 'auto',
+            clearProps: 'transform',
+          }
+        );
+      };
 
-      gsap.fromTo(
-        wrap,
-        {
-          clipPath: CLIP_INITIAL[direction],
-          opacity: 0.15,
-        },
-        {
-          clipPath: 'inset(0% 0% 0% 0%)',
-          opacity: 1,
-          duration: 0.9,
-          delay,
-          ease: 'power3.out',
-          clearProps: 'clipPath,opacity',
-          scrollTrigger: scrollCfg,
-        }
-      );
+      const resetImage = () => {
+        imageShown = false;
+        gsap.killTweensOf(wrap);
+        gsap.killTweensOf(inner);
+        gsap.set(wrap, { clipPath: CLIP_INITIAL[direction], opacity: 0.15 });
+        gsap.set(inner, { scale: 1.08 });
+      };
 
-      gsap.fromTo(
-        inner,
-        { scale: 1.08 },
-        {
-          scale: 1,
-          duration: 1.05,
-          delay,
-          ease: 'power3.out',
-          clearProps: 'transform',
-          scrollTrigger: scrollCfg,
-        }
-      );
+      if (immediate) {
+        playImageIn();
+      } else {
+        resetImage();
+        const checkInitialImage = () => {
+          const vh = window.innerHeight || 900;
+          const r = wrap.getBoundingClientRect();
+          if (r.top < vh * 0.97 && r.bottom > vh * 0.03) {
+            playImageIn();
+          }
+        };
+        ScrollTrigger.create({
+          trigger: wrap,
+          start: 'top 97%',
+          end: 'bottom 3%',
+          onEnter: playImageIn,
+          onEnterBack: playImageIn,
+        });
+        ScrollTrigger.create({
+          trigger: wrap,
+          start: 'top bottom+=8',
+          end: 'bottom top-=8',
+          onLeave: resetImage,
+          onLeaveBack: resetImage,
+        });
+        checkInitialImage();
+      }
 
       if (parallax && !isTouch && !immediate) {
         gsap.fromTo(
@@ -309,31 +549,56 @@ export function EngineeringRule({
     if (!wrap || !line || reducedMotion) return;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        line,
-        { scaleX: 0 },
-        {
-          scaleX: 1,
-          duration: 0.85,
-          delay,
-          ease: 'power3.out',
-          clearProps: 'transform',
-          scrollTrigger: immediate
-            ? undefined
-            : {
-                trigger: wrap,
-                start: 'top 92%',
-                once: true,
-              },
+      const draw = () => {
+        gsap.fromTo(
+          line,
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            duration: 0.85,
+            delay,
+            ease: 'power3.out',
+            overwrite: 'auto',
+            clearProps: 'transform',
+          }
+        );
+      };
+
+      if (immediate) {
+        draw();
+      } else {
+        gsap.set(line, { scaleX: 0 });
+        ScrollTrigger.create({
+          trigger: wrap,
+          start: 'top 97%',
+          end: 'bottom 3%',
+          onEnter: draw,
+          onEnterBack: draw,
+        });
+        ScrollTrigger.create({
+          trigger: wrap,
+          start: 'top bottom+=8',
+          end: 'bottom top-=8',
+          onLeave: () => gsap.set(line, { scaleX: 0 }),
+          onLeaveBack: () => gsap.set(line, { scaleX: 0 }),
+        });
+        const vh = window.innerHeight || 900;
+        const r = wrap.getBoundingClientRect();
+        if (r.top < vh * 0.97 && r.bottom > vh * 0.03) {
+          draw();
         }
-      );
+      }
     }, wrapRef);
 
     return () => ctx.revert();
   }, [immediate, delay, reducedMotion]);
 
   return (
-    <div ref={wrapRef} aria-hidden="true" className={`relative h-[1px] w-full overflow-hidden ${dark ? 'bg-slate-800' : 'bg-[#DCE2E8]'} ${className}`}>
+    <div
+      ref={wrapRef}
+      aria-hidden="true"
+      className={`relative h-[1px] w-full overflow-hidden ${dark ? 'bg-slate-800' : 'bg-[#DCE2E8]'} ${className}`}
+    >
       <div
         ref={lineRef}
         className={`h-full w-full origin-left ${
@@ -416,7 +681,6 @@ export function CountUpMetric({
           if (cancelled) return;
           const elapsed = now - startTime;
           const progress = Math.min(1, elapsed / durationMs);
-          // Smooth quadratic ease-out keeps digits visibly climbing across the full duration
           const eased = 1 - (1 - progress) * (1 - progress);
           const current = Math.round(target * eased);
           const numText =
@@ -440,12 +704,28 @@ export function CountUpMetric({
       }
     };
 
+    const tryStart = () => {
+      if (isInitialLoaderActive()) return;
+      runAnimation();
+    };
+
+    const onLoaderDone = () => {
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight || 900;
+      if (r.top < vh && r.bottom > 0) {
+        tryStart();
+      }
+    };
+    window.addEventListener('termicore:loader-done', onLoaderDone);
+
     if (typeof IntersectionObserver !== 'undefined') {
       const observer = new IntersectionObserver(
         (entries) => {
           if (entries.some((entry) => entry.isIntersecting)) {
-            observer.disconnect();
-            runAnimation();
+            if (!isInitialLoaderActive()) {
+              observer.disconnect();
+              tryStart();
+            }
           }
         },
         { threshold: 0.15 }
@@ -455,14 +735,16 @@ export function CountUpMetric({
       return () => {
         cancelled = true;
         observer.disconnect();
+        window.removeEventListener('termicore:loader-done', onLoaderDone);
         window.clearTimeout(timeoutId);
         window.cancelAnimationFrame(rafId);
       };
     }
 
-    runAnimation();
+    tryStart();
     return () => {
       cancelled = true;
+      window.removeEventListener('termicore:loader-done', onLoaderDone);
       window.clearTimeout(timeoutId);
       window.cancelAnimationFrame(rafId);
     };

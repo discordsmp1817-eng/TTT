@@ -93,7 +93,7 @@ export function ContactPage() {
   return (
     <section className="bg-[#F5F7F9] bg-engineering-grid py-14 lg:py-20">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
-        <RevealBlock className="max-w-2xl mb-10" blur>
+        <RevealBlock direction="up" distance={44} className="max-w-2xl mb-10" blur>
           <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
             Contact TermiCore
           </p>
@@ -106,7 +106,7 @@ export function ContactPage() {
         </RevealBlock>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-          <RevealBlock className="order-2 lg:order-1 lg:col-span-5 space-y-6">
+          <RevealBlock direction="left" distance={56} className="order-2 lg:order-1 lg:col-span-5 space-y-6">
             <GlowCard variant="elevated" className="p-7 border-[#DCE2E8]">
               <h2 className="font-display text-lg font-bold text-[#101D2B]">
                 Dedicated Technical Support
@@ -154,6 +154,8 @@ export function ContactPage() {
           </RevealBlock>
 
           <RevealBlock
+            direction="right"
+            distance={56}
             delay={0.08}
             className="order-1 lg:order-2 lg:col-span-7 rounded-lg border border-[#DCE2E8] bg-white p-6 sm:p-8 shadow-[0_12px_34px_rgba(16,29,43,0.05)]"
           >
@@ -436,7 +438,7 @@ export function QuotePage() {
   return (
     <section className="bg-[#F5F7F9] bg-engineering-grid py-14 lg:py-20">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
-        <RevealBlock className="max-w-2xl mb-10" blur>
+        <RevealBlock direction="up" distance={44} className="max-w-2xl mb-10" blur>
           <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
             Factory-Direct Quotation
           </p>
@@ -449,7 +451,7 @@ export function QuotePage() {
         </RevealBlock>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-          <RevealBlock className="order-2 lg:order-1 lg:col-span-5 space-y-6">
+          <RevealBlock direction="left" distance={56} className="order-2 lg:order-1 lg:col-span-5 space-y-6">
             <GlowCard variant="elevated" className="p-7 border-[#DCE2E8]">
               <h2 className="font-display text-lg font-bold text-[#101D2B]">
                 Why Choose TermiCore?
@@ -526,6 +528,8 @@ export function QuotePage() {
           </RevealBlock>
 
           <RevealBlock
+            direction="right"
+            distance={56}
             delay={0.08}
             className="order-1 lg:order-2 lg:col-span-7 rounded-lg border border-[#DCE2E8] bg-white p-6 sm:p-8 shadow-[0_12px_34px_rgba(16,29,43,0.05)]"
           >

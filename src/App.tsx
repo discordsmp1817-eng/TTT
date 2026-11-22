@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AppProvider, useApp } from './context/AppContext';
@@ -12,6 +12,7 @@ import { findModelByRoute } from './utils/modelSpecifications';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { RfqDrawer } from './components/RfqDrawer';
+import { InitialLoader } from './components/InitialLoader';
 import { INDUSTRIAL_EASE } from './components/MotionPrimitives';
 import { HomePage } from './pages/HomePage';
 import { ProductsPage } from './pages/ProductsPage';
@@ -35,57 +36,6 @@ const STATIC_ROUTE_TITLES: Record<string, string> = {
 function RouteView() {
   const { route } = useApp();
 
-  useEffect(() => {
-    const matchingCategory = PRODUCT_CATEGORIES.find((c) => c.slug === route);
-    if (matchingCategory) {
-      document.title = `${matchingCategory.title} (${matchingCategory.seriesCode}) | TermiCore`;
-      return;
-    }
-    const matchedModel = findModelByRoute(route);
-    if (matchedModel) {
-      document.title = `${matchedModel.sku.model} — ${matchedModel.sku.name} | TermiCore`;
-      return;
-    }
-    document.title =
-      STATIC_ROUTE_TITLES[route] ||
-      'TermiCore — Precision Terminal Block Connectors & Industrial Wiring Systems';
-  }, [route]);
-
-  const renderPage = () => {
-    const matchingCategory = PRODUCT_CATEGORIES.find((c) => c.slug === route);
-    if (matchingCategory) {
-      return <CategoryDetailPage category={matchingCategory} />;
-    }
-
-    const matchedModel = findModelByRoute(route);
-    if (matchedModel) {
-      return (
-        <ModelDetailPage
-          sku={matchedModel.sku}
-          category={matchedModel.category}
-        />
-      );
-    }
-
-    switch (route) {
-      case '/products':
-        return <ProductsPage />;
-      case '/accessories':
-        return <AccessoriesPage />;
-      case '/quality':
-        return <QualityPage />;
-      case '/about':
-        return <AboutPage />;
-      case '/contact':
-        return <ContactPage />;
-      case '/quote':
-        return <QuotePage />;
-      case '/':
-      default:
-        return <HomePage />;
-    }
-  };
-
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -96,19 +46,63 @@ function RouteView() {
         transition={{ duration: 0.14, ease: INDUSTRIAL_EASE }}
         onAnimationComplete={() => ScrollTrigger.refresh()}
       >
-        {renderPage()}
+        {renderPageRoute(route)}
       </motion.div>
     </AnimatePresence>
   );
 }
 
+function renderPageRoute(route: string) {
+  const matchingCategory = PRODUCT_CATEGORIES.find((c) => c.slug === route);
+  if (matchingCategory) {
+    return <CategoryDetailPage category={matchingCategory} />;
+  }
+
+  const matchedModel = findModelByRoute(route);
+  if (matchedModel) {
+    return (
+      <ModelDetailPage
+        sku={matchedModel.sku}
+        category={matchedModel.category}
+      />
+    );
+  }
+
+  switch (route) {
+    case '/products':
+      return <ProductsPage />;
+    case '/accessories':
+      return <AccessoriesPage />;
+    case '/quality':
+      return <QualityPage />;
+    case '/about':
+      return <AboutPage />;
+    case '/contact':
+      return <ContactPage />;
+    case '/quote':
+      return <QuotePage />;
+    case '/':
+    default:
+      return <HomePage />;
+  }
+}
+
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleLoaderComplete = () => {
+    setIsLoading(false);
+    window.dispatchEvent(new CustomEvent('termicore:loader-done'));
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+  };
+
   return (
     <MotionConfig reducedMotion="user">
       <AppProvider>
-        <div className="min-h-screen flex flex-col bg-[#F5F7F9] text-[#101D2B]">
+        <div className="min-h-screen flex flex-col bg-[#F5F7F9] text-[#101D2B] relative overflow-x-clip">
+          {isLoading && <InitialLoader onComplete={handleLoaderComplete} />}
           <Header />
-          <main className="flex-1">
+          <main className="flex-1 overflow-x-clip">
             <RouteView />
           </main>
           <Footer />

@@ -46,11 +46,8 @@ export function ProductsPage() {
     <div>
       <section className="bg-[#F5F7F9] bg-engineering-grid border-b border-[#DCE2E8] py-14 lg:py-20">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
-          <RevealBlock
-            className="flex flex-col lg:flex-row lg:items-end justify-between gap-6"
-            blur
-          >
-            <div className="max-w-2xl">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <RevealBlock direction="left" distance={56} className="max-w-2xl" blur>
               <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
                 Product Catalog
               </p>
@@ -60,10 +57,10 @@ export function ProductsPage() {
               <p className="mt-4 text-base text-[#475569]">
                 Complete portfolio of DIN-rail, PCB terminal blocks, and pluggable PCB connectors from 0.14 mm² board wiring up to 120 mm² / 300 A heavy power feeders.
               </p>
-            </div>
+            </RevealBlock>
 
             {/* Cross-Series SKU Search */}
-            <div className="w-full lg:w-96">
+            <RevealBlock direction="right" distance={56} className="w-full lg:w-96">
               <label
                 htmlFor="catalog-sku-search"
                 className="block text-xs font-semibold text-[#101D2B] mb-1.5"
@@ -81,8 +78,8 @@ export function ProductsPage() {
                   className="w-full rounded-lg border border-[#CBD5E1] bg-white pl-10 pr-4 py-2.5 text-sm text-[#101D2B] placeholder:text-slate-400 focus:border-[#0F766E] focus:ring-2 focus:ring-[#0F766E]/15 focus:outline-none transition-colors"
                 />
               </div>
-            </div>
-          </RevealBlock>
+            </RevealBlock>
+          </div>
 
           <AnimatePresence>
             {query.trim() && (
@@ -121,7 +118,7 @@ export function ProductsPage() {
       <ProductCatalogSection compactHeading />
 
       <section className="bg-[#F5F7F9] py-14 lg:py-16 border-b border-[#DCE2E8]">
-        <RevealBlock className="mx-auto max-w-[1280px] px-4 sm:px-6">
+        <RevealBlock direction="down" distance={54} className="mx-auto max-w-[1280px] px-4 sm:px-6">
           <GlowCard variant="dark" className="bg-engineering-grid-dark p-8 sm:p-10">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div>

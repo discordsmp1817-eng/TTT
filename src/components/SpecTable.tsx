@@ -6,8 +6,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ProductSku, resolveAssetUrl } from '../data/termicoreData';
 import { useApp } from '../context/AppContext';
 import { getModelRoute } from '../utils/modelSpecifications';
+import { getGridItemDirection } from '../utils/scrollReveal';
 import { EngineeringImage } from './EngineeringImage';
-import { GlowCard, usePrefersReducedMotion } from './MotionPrimitives';
+import {
+  attachBiDirectionalReveal,
+  GlowCard,
+  usePrefersReducedMotion,
+} from './MotionPrimitives';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -52,56 +57,53 @@ export function SpecTable({
     if (viewMode === 'cards') {
       const container = gridRef.current;
       if (!container) return;
-      const ctx = gsap.context(() => {
-        const cards = container.querySelectorAll('[data-model-card]');
-        if (!cards.length) return;
-        gsap.fromTo(
-          cards,
-          { opacity: 0, y: 14 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.42,
-            stagger: 0.04,
-            ease: 'power2.out',
-            clearProps: 'transform,opacity',
-            scrollTrigger: {
-              trigger: container,
-              start: 'top 92%',
-              once: true,
-            },
-          }
+      const cards = Array.from(container.querySelectorAll<HTMLElement>('[data-model-card]'));
+      if (!cards.length) return;
+
+      const cleanups = cards.map((card, idx) => {
+        const direction = getGridItemDirection(
+          idx,
+          columns === 2 ? 'quad' : 'columns',
+          columns
         );
-      }, gridRef);
-      return () => ctx.revert();
+        return attachBiDirectionalReveal(card, {
+          direction,
+          distance: 84,
+          duration: 0.96,
+          delay: (idx % columns) * 0.1,
+          scaleFrom: 0.94,
+        });
+      });
+
+      const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
+      return () => {
+        cancelAnimationFrame(raf);
+        cleanups.forEach((fn) => fn());
+        cards.forEach((card) => gsap.set(card, { clearProps: 'transform,opacity,filter' }));
+      };
     }
 
     const tbody = tbodyRef.current;
     if (!tbody) return;
-    const ctx = gsap.context(() => {
-      const rows = tbody.querySelectorAll('tr');
-      if (!rows.length) return;
-      gsap.fromTo(
-        rows,
-        { opacity: 0, y: 10 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.42,
-          stagger: 0.03,
-          ease: 'power2.out',
-          clearProps: 'transform,opacity',
-          scrollTrigger: {
-            trigger: tbody,
-            start: 'top 90%',
-            once: true,
-          },
-        }
-      );
-    }, tbodyRef);
+    const rows = Array.from(tbody.querySelectorAll<HTMLElement>('tr'));
+    if (!rows.length) return;
 
-    return () => ctx.revert();
-  }, [skus, viewMode, reducedMotion]);
+    const cleanups = rows.map((row, idx) =>
+      attachBiDirectionalReveal(row, {
+        direction: getGridItemDirection(idx, 'alternating-lr'),
+        distance: 56,
+        duration: 0.88,
+        delay: Math.min(idx % 6, 4) * 0.05,
+      })
+    );
+
+    const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => {
+      cancelAnimationFrame(raf);
+      cleanups.forEach((fn) => fn());
+      rows.forEach((row) => gsap.set(row, { clearProps: 'transform,opacity,filter' }));
+    };
+  }, [skus, viewMode, columns, reducedMotion]);
 
   const gridColsClass =
     columns === 2

@@ -17,7 +17,7 @@ export function AboutPage() {
     <div>
       <section className="bg-[#F5F7F9] bg-engineering-grid border-b border-[#DCE2E8] py-14 lg:py-20">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center">
-          <RevealBlock className="lg:col-span-6" blur>
+          <RevealBlock direction="left" distance={58} className="lg:col-span-6" blur>
             <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
               About TermiCore · State-of-the-Art Production
             </p>
@@ -55,7 +55,7 @@ export function AboutPage() {
       {/* Real Factory Showcase Section */}
       <section className="bg-white py-16 lg:py-24 border-b border-[#DCE2E8]">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
-          <RevealBlock className="max-w-3xl mb-12">
+          <RevealBlock direction="up" distance={44} className="max-w-3xl mb-12">
             <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
               Factory Floor &amp; Laboratory Infrastructure
             </p>
@@ -67,7 +67,13 @@ export function AboutPage() {
             </p>
           </RevealBlock>
 
-          <StaggerGrid className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3" stagger={0.1} y={24}>
+          <StaggerGrid
+            pattern="columns"
+            columns={3}
+            className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+            stagger={0.1}
+            distance={54}
+          >
             <div data-stagger-item className="flex">
               <GlowCard variant="elevated" className="w-full p-6">
                 <div className="overflow-hidden rounded-md border border-[#DCE2E8] bg-[#EEF2F6] aspect-[16/10] mb-4">
@@ -133,7 +139,7 @@ export function AboutPage() {
 
       <section className="bg-[#EEF2F6] text-[#101D2B] border-b border-[#DCE2E8] py-14 lg:py-20">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
-          <RevealBlock className="max-w-2xl mb-10">
+          <RevealBlock direction="up" distance={44} className="max-w-2xl mb-10">
             <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
               Engineering Excellence in Every Connection
             </p>
@@ -142,7 +148,13 @@ export function AboutPage() {
             </h2>
           </RevealBlock>
 
-          <StaggerGrid className="grid grid-cols-1 gap-6 md:grid-cols-2" stagger={0.08} y={18}>
+          <StaggerGrid
+            pattern="quad"
+            columns={2}
+            className="grid grid-cols-1 gap-6 md:grid-cols-2"
+            stagger={0.09}
+            distance={52}
+          >
             {[
               {
                 title: 'Uncompromising Quality',
@@ -184,9 +196,11 @@ export function AboutPage() {
           </StaggerGrid>
 
           <StaggerGrid
+            pattern="columns"
+            columns={4}
             className="mt-10 grid grid-cols-1 gap-px bg-slate-200 border border-slate-200 rounded-lg overflow-hidden sm:grid-cols-2 lg:grid-cols-4"
-            stagger={0.07}
-            y={14}
+            stagger={0.08}
+            distance={48}
           >
             {WHY_CHOOSE_PILLARS.map((pillar) => (
               <div
@@ -210,7 +224,7 @@ export function AboutPage() {
       </section>
 
       <section className="bg-[#F5F7F9] py-14 lg:py-16">
-        <RevealBlock className="mx-auto max-w-[1280px] px-4 sm:px-6">
+        <RevealBlock direction="down" distance={54} className="mx-auto max-w-[1280px] px-4 sm:px-6">
           <GlowCard variant="dark" className="bg-engineering-grid-dark p-8 sm:p-10">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div>

@@ -20,11 +20,17 @@ import {
   paginateItems,
 } from '../utils/modelSpecifications';
 import { useApp } from '../context/AppContext';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { EngineeringImage } from '../components/EngineeringImage';
+import { getGridItemDirection } from '../utils/scrollReveal';
 import {
+  attachBiDirectionalReveal,
   GlowCard,
   MagneticButton,
   RevealBlock,
+  StaggerGrid,
+  usePrefersReducedMotion,
 } from '../components/MotionPrimitives';
 
 export function AccessoriesPage() {
@@ -36,6 +42,8 @@ export function AccessoriesPage() {
   const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const catalogSectionRef = useRef<HTMLElement | null>(null);
+  const tableBodyRef = useRef<HTMLTableSectionElement | null>(null);
+  const reducedMotion = usePrefersReducedMotion();
 
   const allAccessories = useMemo(() => getAllCatalogAccessories(), []);
 
@@ -115,10 +123,34 @@ export function AccessoriesPage() {
     selectedNecessity !== 'All' ||
     searchQuery.trim().length > 0;
 
+  useEffect(() => {
+    if (reducedMotion || viewMode !== 'table') return;
+    const tbody = tableBodyRef.current;
+    if (!tbody) return;
+    const rows = Array.from(tbody.querySelectorAll<HTMLElement>('tr'));
+    if (!rows.length) return;
+
+    const cleanups = rows.map((row, idx) =>
+      attachBiDirectionalReveal(row, {
+        direction: getGridItemDirection(idx, 'alternating-lr'),
+        distance: 32,
+        duration: 0.72,
+        delay: Math.min(idx % 6, 4) * 0.04,
+      })
+    );
+
+    const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => {
+      cancelAnimationFrame(raf);
+      cleanups.forEach((fn) => fn());
+      rows.forEach((row) => gsap.set(row, { clearProps: 'transform,opacity,filter' }));
+    };
+  }, [paginated.items, viewMode, reducedMotion]);
+
   return (
     <div>
       <section className="bg-[#F5F7F9] bg-engineering-grid border-b border-[#DCE2E8] py-14 lg:py-20">
-        <RevealBlock className="mx-auto max-w-[1280px] px-4 sm:px-6" blur>
+        <RevealBlock direction="left" distance={56} className="mx-auto max-w-[1280px] px-4 sm:px-6" blur>
           <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
             Modular Components · {allAccessories.length} Catalog Part Numbers
           </p>
@@ -227,7 +259,7 @@ export function AccessoriesPage() {
       >
         <div className="mx-auto max-w-[1280px] rounded-xl border border-[#DCE2E8] bg-white p-5 sm:p-8 lg:p-10 shadow-[0_14px_40px_rgba(16,29,43,0.05)]">
           {/* Compact Search & Pagination Summary Bar */}
-          <div className="mb-8 rounded-lg border border-slate-200 bg-[#F7F9FB] p-3.5 sm:p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <RevealBlock direction="up" distance={36} className="mb-8 rounded-lg border border-slate-200 bg-[#F7F9FB] p-3.5 sm:p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
             <div className="relative flex-1">
               <label htmlFor="accessory-finder-input" className="sr-only">
                 Search accessories by part number, compatible model, or specification
@@ -278,12 +310,17 @@ export function AccessoriesPage() {
                 </button>
               )}
             </div>
-          </div>
+            </RevealBlock>
 
           {paginated.items.length > 0 ? (
             <>
               {viewMode === 'cards' ? (
-                <div
+                <StaggerGrid
+                  key={`acc-grid-${selectedCategory}-${selectedSeriesId}-${selectedNecessity}-${searchQuery}-${paginated.currentPage}`}
+                  pattern="columns"
+                  columns={3}
+                  stagger={0.08}
+                  distance={50}
                   data-testid="accessories-grid"
                   className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
                 >
@@ -301,6 +338,7 @@ export function AccessoriesPage() {
                     return (
                       <article
                         key={item.partNumber}
+                        data-stagger-item
                         data-testid="accessory-card"
                         className="group flex flex-col justify-between rounded-lg border border-[#DCE2E8] bg-[#FAFBFD] p-5 transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#0F766E]/55 hover:shadow-[0_12px_28px_rgba(16,29,43,0.07)]"
                       >
@@ -410,7 +448,7 @@ export function AccessoriesPage() {
                       </article>
                     );
                   })}
-                </div>
+                </StaggerGrid>
               ) : (
                 <div
                   data-testid="accessories-table"
@@ -427,7 +465,7 @@ export function AccessoriesPage() {
                         <th className="py-3 px-4 text-right">Action</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#EEF2F6]">
+                    <tbody ref={tableBodyRef} className="divide-y divide-[#EEF2F6]">
                       {paginated.items.map((item) => {
                         const inRfq = rfqItems.some((rfq) => rfq.id === item.partNumber);
                         const previewModels = item.compatibleModels.slice(0, 2);
@@ -608,7 +646,7 @@ export function AccessoriesPage() {
             </div>
           )}
 
-          <RevealBlock className="mt-12">
+          <RevealBlock direction="down" distance={54} className="mt-12">
             <GlowCard variant="dark" className="bg-engineering-grid-dark p-8 sm:p-10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div>

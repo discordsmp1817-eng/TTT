@@ -205,7 +205,9 @@ export function Header() {
           className="group flex items-center gap-2.5 sm:gap-3 text-left whitespace-nowrap shrink-0 cursor-pointer rounded"
           aria-label="TermiCore Home"
         >
-          <TermiCoreLogo className="h-9 w-9 shrink-0 shadow-2xs transition-transform duration-300 group-hover:scale-105" />
+          <motion.div layoutId="nav-logo" className="flex items-center">
+            <TermiCoreLogo className="h-9 w-9 shrink-0 shadow-2xs transition-transform duration-300 group-hover:scale-105" />
+          </motion.div>
           <span className="font-display text-base sm:text-lg font-extrabold tracking-tight text-[#101D2B]">
             TermiCore
           </span>

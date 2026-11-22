@@ -144,8 +144,9 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-stretch">
             <RevealBlock
+              direction="left"
+              distance={60}
               className="lg:col-span-7 flex flex-col justify-between rounded-lg border border-[#DCE2E8] bg-white p-6 sm:p-9 shadow-[0_10px_32px_rgba(16,29,43,0.05)]"
-              y={16}
             >
               <div>
                 <div className="font-mono text-xs font-semibold text-[#0F766E]">
@@ -213,31 +214,40 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
               </div>
             </RevealBlock>
 
-            <GlowCard
-              variant="elevated"
-              className="lg:col-span-5 p-4 flex items-center justify-center border-[#DCE2E8]"
-            >
-              <ImageReveal
-                key={category.id}
-                direction="center"
-                immediate
-                className="w-full h-full flex items-center justify-center rounded-md bg-white border border-[#EEF2F6] p-3"
+            <RevealBlock direction="right" distance={60} delay={0.08} className="lg:col-span-5 flex">
+              <GlowCard
+                variant="elevated"
+                className="w-full p-4 flex items-center justify-center border-[#DCE2E8]"
               >
-                <EngineeringImage
-                  src={category.image}
-                  alt={category.imageAlt}
-                  fallbackTitle={category.title}
-                  className="h-full w-full max-h-[340px] object-contain rounded"
-                />
-              </ImageReveal>
-            </GlowCard>
+                <ImageReveal
+                  key={category.id}
+                  direction="right"
+                  immediate
+                  className="w-full h-full flex items-center justify-center rounded-md bg-white border border-[#EEF2F6] p-3"
+                >
+                  <EngineeringImage
+                    src={category.image}
+                    alt={category.imageAlt}
+                    fallbackTitle={category.title}
+                    className="h-full w-full max-h-[340px] object-contain rounded"
+                  />
+                </ImageReveal>
+              </GlowCard>
+            </RevealBlock>
           </div>
 
           {isPcbCategory && (
-            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <StaggerGrid
+              pattern="columns"
+              columns={4}
+              stagger={0.08}
+              distance={44}
+              className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+            >
               {PCB_SELECTION_PARAMETERS.map((param) => (
                 <div
                   key={param.title}
+                  data-stagger-item
                   className="rounded-lg border border-[#DCE2E8] bg-white p-5 transition-colors hover:border-[#0F766E]/45"
                 >
                   <p className="font-mono text-xs font-semibold text-[#0F766E]">
@@ -251,7 +261,7 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
                   </p>
                 </div>
               ))}
-            </div>
+            </StaggerGrid>
           )}
         </div>
       </section>
@@ -259,7 +269,7 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
       {/* Full Technical Specifications & Interactive Type Filter */}
       <section className="bg-[#EEF2F6] border-b border-[#DCE2E8] px-4 sm:px-6 py-14 lg:py-20">
         <div className="mx-auto max-w-[1280px] rounded-xl border border-[#DCE2E8] bg-white p-5 sm:p-8 lg:p-10 shadow-[0_14px_40px_rgba(16,29,43,0.05)]">
-          <RevealBlock className="flex flex-col gap-5 mb-7">
+          <RevealBlock direction="up" distance={44} className="flex flex-col gap-5 mb-7">
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
               <div>
                 <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
@@ -426,7 +436,7 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
       <section className="bg-white border-b border-slate-200 py-14 lg:py-20">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
-            <RevealBlock className="lg:col-span-6">
+            <RevealBlock direction="left" distance={56} className="lg:col-span-6">
               <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
                 Engineering Mechanism
               </p>
@@ -437,7 +447,13 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
                 {category.principleSummary}
               </p>
 
-              <StaggerGrid className="mt-6 space-y-4" stagger={0.08} y={14}>
+              <StaggerGrid
+                pattern="alternating-lr"
+                columns={2}
+                className="mt-6 space-y-4"
+                stagger={0.08}
+                distance={48}
+              >
                 {category.principlePoints.map((pt) => (
                   <div key={pt.title} data-stagger-item>
                     <GlowCard variant="light" className="p-4">
@@ -458,16 +474,23 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
               </StaggerGrid>
             </RevealBlock>
 
-            <RevealBlock className="lg:col-span-6 space-y-6" delay={0.08}>
+            <RevealBlock direction="right" distance={56} className="lg:col-span-6 space-y-6" delay={0.08}>
               {category.steps && (
                 <div className="rounded-lg border border-slate-200 bg-[#EEF2F6] p-6 sm:p-8">
                   <h3 className="font-display text-lg font-bold text-[#0F172A]">
                     3-Step Conductor Termination
                   </h3>
-                  <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <StaggerGrid
+                    pattern="columns"
+                    columns={3}
+                    stagger={0.08}
+                    distance={36}
+                    className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-4"
+                  >
                     {category.steps.map((s) => (
                       <div
                         key={s.step}
+                        data-stagger-item
                         className="rounded-md border border-slate-200 bg-white p-4"
                       >
                         <div className="font-mono text-xs font-bold text-[#0F766E]">
@@ -481,7 +504,7 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
                         </p>
                       </div>
                     ))}
-                  </div>
+                  </StaggerGrid>
                 </div>
               )}
 
@@ -500,10 +523,17 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
                     <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
                   </button>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <StaggerGrid
+                  pattern="quad"
+                  columns={2}
+                  stagger={0.08}
+                  distance={38}
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                >
                   {ACCESSORIES.slice(0, 4).map((acc) => (
                     <div
                       key={acc.id}
+                      data-stagger-item
                       className="rounded-md border border-slate-200 bg-white p-3.5 transition-colors hover:border-[#0F766E]/45"
                     >
                       <div className="font-mono text-[11px] font-semibold text-[#0F766E]">
@@ -515,7 +545,7 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
                       <p className="mt-1 text-xs text-[#475569]">{acc.description}</p>
                     </div>
                   ))}
-                </div>
+                </StaggerGrid>
               </div>
             </RevealBlock>
           </div>
@@ -525,17 +555,26 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
       {/* Technical FAQs */}
       {category.faqs.length > 0 && (
         <section className="bg-[#EEF2F6] py-14 lg:py-20">
-          <RevealBlock className="mx-auto max-w-3xl px-4 sm:px-6">
-            <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#101D2B] text-center mb-3">
-              Technical Frequently Asked Questions
-            </h2>
-            <EngineeringRule className="max-w-xs mx-auto mb-8" />
-            <div className="space-y-3">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6">
+            <RevealBlock direction="up" distance={40}>
+              <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#101D2B] text-center mb-3">
+                Technical Frequently Asked Questions
+              </h2>
+              <EngineeringRule className="max-w-xs mx-auto mb-8" />
+            </RevealBlock>
+            <StaggerGrid
+              pattern="alternating-lr"
+              columns={2}
+              stagger={0.07}
+              distance={44}
+              className="space-y-3"
+            >
               {category.faqs.map((faq, idx) => {
                 const isOpen = openFaq === idx;
                 return (
                   <div
                     key={faq.question}
+                    data-stagger-item
                     className={`rounded-lg border transition-colors duration-200 overflow-hidden bg-white ${
                       isOpen
                         ? 'border-[#0F766E]/45 shadow-xs'
@@ -573,8 +612,8 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
                   </div>
                 );
               })}
-            </div>
-          </RevealBlock>
+            </StaggerGrid>
+          </div>
         </section>
       )}
     </div>

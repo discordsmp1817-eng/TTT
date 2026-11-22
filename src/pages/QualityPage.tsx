@@ -17,7 +17,7 @@ export function QualityPage() {
     <div>
       <section className="bg-[#F5F7F9] bg-engineering-grid border-b border-[#DCE2E8] py-14 lg:py-20">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-center">
-          <RevealBlock className="lg:col-span-7" blur>
+          <RevealBlock direction="left" distance={58} className="lg:col-span-7" blur>
             <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
               Quality &amp; Approvals
             </p>
@@ -55,7 +55,7 @@ export function QualityPage() {
 
       <section className="bg-[#EEF2F6] border-b border-[#DCE2E8] py-14 lg:py-20">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
-          <RevealBlock className="max-w-2xl mb-10">
+          <RevealBlock direction="up" distance={44} className="max-w-2xl mb-10">
             <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
               Certifications &amp; Approvals
             </p>
@@ -65,9 +65,11 @@ export function QualityPage() {
           </RevealBlock>
 
           <StaggerGrid
+            pattern="columns"
+            columns={3}
             className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
-            stagger={0.07}
-            y={18}
+            stagger={0.09}
+            distance={52}
           >
             {CERTIFICATIONS.map((cert) => (
               <div key={cert.id} data-stagger-item className="flex">
@@ -102,7 +104,7 @@ export function QualityPage() {
       <section className="bg-white py-14 lg:py-20">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-            <RevealBlock className="lg:col-span-5">
+            <RevealBlock direction="left" distance={56} className="lg:col-span-5">
               <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
                 Rigorous Testing Protocol
               </p>
@@ -114,9 +116,11 @@ export function QualityPage() {
               </p>
             </RevealBlock>
             <StaggerGrid
+              pattern="quad"
+              columns={2}
               className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4"
-              stagger={0.08}
-              y={16}
+              stagger={0.09}
+              distance={50}
             >
               {TESTING_PROTOCOLS.map((protocol) => (
                 <div key={protocol.title} data-stagger-item className="flex">
@@ -134,7 +138,7 @@ export function QualityPage() {
             </StaggerGrid>
           </div>
 
-          <RevealBlock className="mt-12">
+          <RevealBlock direction="down" distance={54} className="mt-12">
             <GlowCard variant="dark" className="bg-engineering-grid-dark p-8 sm:p-10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div>

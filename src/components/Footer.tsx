@@ -9,7 +9,7 @@ import {
   resolveAssetUrl,
 } from '../data/termicoreData';
 import { NavigationFilter, useApp } from '../context/AppContext';
-import { INDUSTRIAL_EASE } from './MotionPrimitives';
+import { INDUSTRIAL_EASE, RevealBlock, StaggerGrid } from './MotionPrimitives';
 
 export function Footer() {
   const { navigate, legalModal, setLegalModal } = useApp();
@@ -25,9 +25,16 @@ export function Footer() {
   return (
     <footer className="bg-[#101D2B] text-[#CBD5E1] border-t border-[#243447]">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-14 lg:py-16">
-        <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-[1.22fr_0.65fr_1.12fr_1.15fr_1.18fr_1.12fr] xl:gap-5">
+        <StaggerGrid
+          pattern="columns"
+          columns={4}
+          distance={36}
+          duration={0.85}
+          stagger={0.07}
+          className="grid grid-cols-1 gap-9 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-[1.22fr_0.65fr_1.12fr_1.15fr_1.18fr_1.12fr] xl:gap-5"
+        >
           {/* Brand Column */}
-          <div>
+          <div data-stagger-item>
             <button
               type="button"
               onClick={() => handleLink('/')}
@@ -58,7 +65,7 @@ export function Footer() {
           </div>
 
           {/* Navigation Links */}
-          <div>
+          <div data-stagger-item>
             <h3 className="font-display text-sm font-bold text-white tracking-wide whitespace-nowrap">
               Company
             </h3>
@@ -86,7 +93,7 @@ export function Footer() {
 
           {/* DIN Rail Terminal Blocks (Separate Div) */}
           {dinGroup && (
-            <div>
+            <div data-stagger-item>
               <h3 className="font-display text-sm font-bold text-white tracking-wide whitespace-nowrap">
                 {dinGroup.title}
               </h3>
@@ -108,7 +115,7 @@ export function Footer() {
 
           {/* PCB Terminal Blocks (Separate Div) */}
           {pcbGroup && (
-            <div>
+            <div data-stagger-item>
               <h3 className="font-display text-sm font-bold text-white tracking-wide whitespace-nowrap">
                 {pcbGroup.title}
               </h3>
@@ -130,7 +137,7 @@ export function Footer() {
 
           {/* Barrier Terminal Blocks (Separate Div) */}
           {barrierGroup && (
-            <div>
+            <div data-stagger-item>
               <h3 className="font-display text-sm font-bold text-white tracking-wide whitespace-nowrap">
                 {barrierGroup.title}
               </h3>
@@ -151,7 +158,7 @@ export function Footer() {
           )}
 
           {/* Contact Us */}
-          <div>
+          <div data-stagger-item>
             <h3 className="font-display text-sm font-bold text-white tracking-wide whitespace-nowrap">
               Engineering Desk
             </h3>
@@ -184,10 +191,15 @@ export function Footer() {
               </li>
             </ul>
           </div>
-        </div>
+        </StaggerGrid>
 
         {/* Bottom Bar */}
-        <div className="mt-12 border-t border-[#243447] pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#94A3B8]">
+        <RevealBlock
+          direction="up"
+          distance={24}
+          duration={0.85}
+          className="mt-12 border-t border-[#243447] pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#94A3B8]"
+        >
           <div>&copy; {new Date().getFullYear()} TermiCore Industrial Connectivity. All rights reserved.</div>
           <div className="flex flex-wrap items-center gap-6">
             <button
@@ -212,7 +224,7 @@ export function Footer() {
               Sitemap
             </button>
           </div>
-        </div>
+        </RevealBlock>
       </div>
 
       {/* Legal & Sitemap Modal */}

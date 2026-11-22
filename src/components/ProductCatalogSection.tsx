@@ -478,7 +478,7 @@ export function ProductCatalogSection({
       className="bg-[#EEF2F6] border-y border-[#DCE2E8] px-4 sm:px-6 py-14 lg:py-20"
     >
       <div className="mx-auto max-w-[1280px] rounded-xl border border-[#DCE2E8] bg-white p-5 sm:p-8 lg:p-10 shadow-[0_14px_40px_rgba(16,29,43,0.05)]">
-        <RevealBlock className="mb-8">
+        <RevealBlock direction="up" distance={78} className="mb-8">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
               <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
@@ -658,7 +658,7 @@ export function ProductCatalogSection({
 
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-start">
                 {/* Selected Product Card */}
-                <div className="lg:col-span-4">
+                <RevealBlock direction="left" distance={54} className="lg:col-span-4">
                   <GlowCard
                     as="article"
                     variant="elevated"
@@ -759,10 +759,10 @@ export function ProductCatalogSection({
                       </div>
                     </div>
                   </GlowCard>
-                </div>
+                </RevealBlock>
 
                 {/* Specification Matrix Panel Replacing Hidden Containers */}
-                <div className="lg:col-span-8 rounded-lg border border-slate-200 bg-white p-5 sm:p-6">
+                <RevealBlock direction="right" distance={54} className="lg:col-span-8 rounded-lg border border-slate-200 bg-white p-5 sm:p-6">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-5 border-b border-slate-200">
                     <div>
                       <div className="font-mono text-xs font-semibold text-[#0F766E]">
@@ -798,7 +798,7 @@ export function ProductCatalogSection({
                     columns={2}
                     fallbackImage={expandedCategory.image}
                   />
-                </div>
+                </RevealBlock>
               </div>
             </motion.div>
           ) : expandedGroup ? (
@@ -837,11 +837,17 @@ export function ProductCatalogSection({
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <StaggerGrid
+                pattern="columns"
+                columns={3}
+                stagger={0.11}
+                distance={92}
+                className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+              >
                 {expandedGroup.childCategories.map((cat) =>
                   renderCategorySubCard(cat, true)
                 )}
-              </div>
+              </StaggerGrid>
             </motion.div>
           ) : (
             <motion.div
@@ -891,8 +897,10 @@ export function ProductCatalogSection({
                 <StaggerGrid
                   key={`${activeFilter}-${needFilter}-${normalizedQuery}`}
                   className="grid grid-cols-1 gap-6 md:grid-cols-2"
-                  stagger={0.07}
-                  y={20}
+                  pattern="quad"
+                  columns={2}
+                  stagger={0.12}
+                  distance={98}
                 >
                   {visibleEntries.map((entry) => renderTopEntryCard(entry))}
                 </StaggerGrid>
