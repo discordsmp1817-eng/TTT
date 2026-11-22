@@ -140,7 +140,7 @@ export function ProductsPage() {
                 <MagneticButton
                   type="button"
                   onClick={() => navigate('/quote')}
-                  className="group inline-flex items-center gap-2 rounded-lg bg-[#0D9488] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#0F766E] transition-colors cursor-pointer min-h-[44px]"
+                  className="group inline-flex items-center gap-2 rounded-lg bg-[#0F766E] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#0D9488] transition-colors cursor-pointer min-h-[44px]"
                 >
                   <span>Request Quote</span>
                   <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />

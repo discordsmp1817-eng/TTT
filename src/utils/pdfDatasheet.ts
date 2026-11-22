@@ -1,4 +1,3 @@
-import { jsPDF } from 'jspdf';
 import { ProductCategory, ProductSku } from '../data/termicoreData';
 import {
   buildModelSpecificationSections,
@@ -64,6 +63,7 @@ export async function downloadModelPdfDatasheet(
   category: ProductCategory,
   resolvedProductImageUrl: string
 ): Promise<void> {
+  const { jsPDF } = await import('jspdf');
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',

@@ -448,7 +448,7 @@ export function Header({ isLoading = false }: { isLoading?: boolean }) {
                   <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#0F766E]">
                     TermiCore Connection Architecture
                   </span>
-                  <span className="hidden xl:inline text-xs text-[#657382]">
+                  <span className="hidden xl:inline text-xs text-[#475569]">
                     Select a terminal family or jump straight to a series
                   </span>
                 </div>
@@ -488,7 +488,7 @@ export function Header({ isLoading = false }: { isLoading?: boolean }) {
                       <span className="mt-0.5 font-display text-sm font-bold leading-snug text-[#101D2B] group-hover/col:text-[#0F766E] transition-colors truncate">
                         {group.title}
                       </span>
-                      <p className="mt-0.5 text-[11px] leading-snug text-[#657382] truncate">
+                      <p className="mt-0.5 text-[11px] leading-snug text-[#475569] truncate">
                         {group.summary}
                       </p>
                     </button>
@@ -549,7 +549,7 @@ export function Header({ isLoading = false }: { isLoading?: boolean }) {
               <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
                 {/* Quick 2-Column Primary Site Links */}
                 <div>
-                  <p className="mb-2 px-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-[#657382]">
+                  <p className="mb-2 px-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-[#475569]">
                     Navigation
                   </p>
                   <div className="grid grid-cols-2 gap-2">
@@ -568,7 +568,7 @@ export function Header({ isLoading = false }: { isLoading?: boolean }) {
                         >
                           <Icon
                             className={`h-4 w-4 shrink-0 ${
-                              item.active ? 'text-[#0F766E]' : 'text-[#657382]'
+                              item.active ? 'text-[#0F766E]' : 'text-[#475569]'
                             }`}
                           />
                           <span className="truncate">{item.label}</span>
@@ -581,7 +581,7 @@ export function Header({ isLoading = false }: { isLoading?: boolean }) {
                 {/* Collapsible Product Family Accordions */}
                 <div className="border-t border-[#EEF2F6] pt-4">
                   <div className="mb-2.5 flex items-center justify-between px-1">
-                    <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#657382]">
+                    <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#475569]">
                       Product Families
                     </span>
                     <button
@@ -625,7 +625,7 @@ export function Header({ isLoading = false }: { isLoading?: boolean }) {
                               </div>
                             </div>
                             <ChevronDown
-                              className={`h-4 w-4 shrink-0 text-[#657382] transition-transform duration-200 ${
+                              className={`h-4 w-4 shrink-0 text-[#475569] transition-transform duration-200 ${
                                 isExpanded ? 'rotate-180 text-[#0F766E]' : ''
                               }`}
                             />
@@ -659,7 +659,7 @@ export function Header({ isLoading = false }: { isLoading?: boolean }) {
                                     >
                                       <span className="truncate">{item.label}</span>
                                       {item.specTag && (
-                                        <span className="font-mono text-[11px] text-[#657382] shrink-0">
+                                        <span className="font-mono text-[11px] text-[#475569] shrink-0">
                                           {item.specTag}
                                         </span>
                                       )}

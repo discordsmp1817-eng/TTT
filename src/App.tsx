@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useCallback, useState } from 'react';
+import { Suspense, lazy, useCallback, useState } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AppProvider, useApp } from './context/AppContext';
@@ -15,23 +15,31 @@ import { RfqDrawer } from './components/RfqDrawer';
 import { InitialLoader } from './components/InitialLoader';
 import { INDUSTRIAL_EASE } from './components/MotionPrimitives';
 import { HomePage } from './pages/HomePage';
-import { ProductsPage } from './pages/ProductsPage';
-import { CategoryDetailPage } from './pages/CategoryDetailPage';
-import { ModelDetailPage } from './pages/ModelDetailPage';
-import { AccessoriesPage } from './pages/AccessoriesPage';
-import { QualityPage } from './pages/QualityPage';
-import { AboutPage } from './pages/AboutPage';
-import { ContactPage, QuotePage } from './pages/ContactQuotePages';
 
-const STATIC_ROUTE_TITLES: Record<string, string> = {
-  '/': 'TermiCore — Precision Terminal Block Connectors & Industrial Wiring Systems',
-  '/products': 'Terminal Block Product Catalog | TermiCore',
-  '/accessories': 'DIN Rail Accessories, Jumpers & End Plates | TermiCore',
-  '/quality': 'Quality Testing, UL 1059 & IEC 60947-7-1 Compliance | TermiCore',
-  '/about': 'About TermiCore | Industrial Connectivity Manufacturer',
-  '/contact': 'Contact Engineering & Sales | TermiCore',
-  '/quote': 'Request a Factory-Direct Quote | TermiCore',
-};
+const ProductsPage = lazy(() =>
+  import('./pages/ProductsPage').then((m) => ({ default: m.ProductsPage }))
+);
+const CategoryDetailPage = lazy(() =>
+  import('./pages/CategoryDetailPage').then((m) => ({ default: m.CategoryDetailPage }))
+);
+const ModelDetailPage = lazy(() =>
+  import('./pages/ModelDetailPage').then((m) => ({ default: m.ModelDetailPage }))
+);
+const AccessoriesPage = lazy(() =>
+  import('./pages/AccessoriesPage').then((m) => ({ default: m.AccessoriesPage }))
+);
+const QualityPage = lazy(() =>
+  import('./pages/QualityPage').then((m) => ({ default: m.QualityPage }))
+);
+const AboutPage = lazy(() =>
+  import('./pages/AboutPage').then((m) => ({ default: m.AboutPage }))
+);
+const ContactPage = lazy(() =>
+  import('./pages/ContactQuotePages').then((m) => ({ default: m.ContactPage }))
+);
+const QuotePage = lazy(() =>
+  import('./pages/ContactQuotePages').then((m) => ({ default: m.QuotePage }))
+);
 
 function RouteView() {
   const { route } = useApp();
@@ -46,7 +54,9 @@ function RouteView() {
         transition={{ duration: 0.14, ease: INDUSTRIAL_EASE }}
         onAnimationComplete={() => ScrollTrigger.refresh()}
       >
-        {renderPageRoute(route)}
+        <Suspense fallback={<div className="min-h-[60vh]" aria-hidden="true" />}>
+          {renderPageRoute(route)}
+        </Suspense>
       </motion.div>
     </AnimatePresence>
   );

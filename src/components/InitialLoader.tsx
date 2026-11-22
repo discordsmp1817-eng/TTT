@@ -34,15 +34,15 @@ export function InitialLoader({ onComplete }: { onComplete: () => void }) {
 
     const tl = gsap.timeline();
 
-    // Step 1: Reveal only the centered logo mark cleanly over the opaque backdrop
+    // Step 1: Paint centered logo immediately (FCP-ready) with subtle precision settle
     tl.fromTo(
       logoWrap,
-      { scale: 0.74, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 0.55, ease: 'power3.out' }
+      { scale: 0.88, opacity: 1 },
+      { scale: 1, opacity: 1, duration: 0.36, ease: 'power3.out' }
     );
 
     // Step 2: Hold cleanly at center so only the logo is visible
-    tl.to({}, { duration: 0.45 });
+    tl.to({}, { duration: 0.34 });
 
     // Step 3: Pin logoWrap in viewport space and fly dynamically to [data-navbar-logo]
     tl.add(() => {
@@ -89,7 +89,7 @@ export function InitialLoader({ onComplete }: { onComplete: () => void }) {
 
       flightTween = gsap.to(flightProxy, {
         progress: 1,
-        duration: 0.85,
+        duration: 0.72,
         ease: 'none',
         onUpdate: updateFlightFrame,
         onComplete: () => {
@@ -103,8 +103,8 @@ export function InitialLoader({ onComplete }: { onComplete: () => void }) {
 
       backdropTween = gsap.to(backdrop, {
         opacity: 0,
-        duration: 0.68,
-        delay: 0.16,
+        duration: 0.56,
+        delay: 0.12,
         ease: 'power2.out',
         onStart: () => {
           releaseHeroReveal();
@@ -135,9 +135,11 @@ export function InitialLoader({ onComplete }: { onComplete: () => void }) {
         aria-hidden="true"
       />
 
-      {/* Centered TermiCore logo that flies directly into [data-navbar-logo] */}
+      {/* Centered TermiCore logo rendered immediately for FCP before flying to [data-navbar-logo] */}
       <div
         ref={logoWrapRef}
+        role="img"
+        aria-label="TermiCore"
         data-testid="loader-flying-logo"
         className="relative z-10 flex h-24 w-24 items-center justify-center will-change-transform"
       >

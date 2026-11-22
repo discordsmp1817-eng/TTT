@@ -161,7 +161,7 @@ export function ProductCatalogSection({
         className="group w-full bg-[#F5F7F9] hover:-translate-y-1 focus-within:border-[#0F766E] focus-within:ring-2 focus-within:ring-[#0F766E]/20"
       >
         <div className="p-6 flex flex-col flex-1">
-          <div className="flex items-center justify-between gap-2 text-xs font-medium text-[#657382]">
+          <div className="flex items-center justify-between gap-2 text-xs font-medium text-[#475569]">
             <span className="font-mono font-semibold text-[#0F766E]">
               {cat.seriesCode}
             </span>
@@ -197,19 +197,19 @@ export function ProductCatalogSection({
 
           <dl className="mt-4 grid grid-cols-3 gap-2.5 rounded-md border border-[#DCE2E8] bg-white p-3 text-xs">
             <div>
-              <dt className="text-[#657382]">Wire Size</dt>
+              <dt className="text-[#475569]">Wire Size</dt>
               <dd className="mt-0.5 font-mono font-semibold text-[#101D2B] tabular-nums">
                 {cat.wireRangeSummary}
               </dd>
             </div>
             <div>
-              <dt className="text-[#657382]">Max Current</dt>
+              <dt className="text-[#475569]">Max Current</dt>
               <dd className="mt-0.5 font-mono font-semibold text-[#101D2B] tabular-nums">
                 {cat.currentMaxSummary}
               </dd>
             </div>
             <div>
-              <dt className="text-[#657382]">Voltage</dt>
+              <dt className="text-[#475569]">Voltage</dt>
               <dd className="mt-0.5 font-mono font-semibold text-[#101D2B] tabular-nums">
                 {cat.voltageMaxSummary}
               </dd>
@@ -275,7 +275,7 @@ export function ProductCatalogSection({
             className="group w-full bg-[#F5F7F9] hover:-translate-y-1 focus-within:border-[#0F766E] focus-within:ring-2 focus-within:ring-[#0F766E]/20"
           >
             <div className="p-6 flex flex-col flex-1">
-              <div className="flex items-center justify-between gap-2 text-xs font-medium text-[#657382]">
+              <div className="flex items-center justify-between gap-2 text-xs font-medium text-[#475569]">
                 <span className="font-mono font-semibold text-[#0F766E]">
                   {cat.seriesCode}
                 </span>
@@ -311,19 +311,19 @@ export function ProductCatalogSection({
 
               <dl className="mt-4 grid grid-cols-3 gap-2.5 rounded-md border border-[#DCE2E8] bg-white p-3 text-xs">
                 <div>
-                  <dt className="text-[#657382]">Wire Size</dt>
+                  <dt className="text-[#475569]">Wire Size</dt>
                   <dd className="mt-0.5 font-mono font-semibold text-[#101D2B] tabular-nums">
                     {cat.wireRangeSummary}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-[#657382]">Max Current</dt>
+                  <dt className="text-[#475569]">Max Current</dt>
                   <dd className="mt-0.5 font-mono font-semibold text-[#101D2B] tabular-nums">
                     {cat.currentMaxSummary}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-[#657382]">Voltage</dt>
+                  <dt className="text-[#475569]">Voltage</dt>
                   <dd className="mt-0.5 font-mono font-semibold text-[#101D2B] tabular-nums">
                     {cat.voltageMaxSummary}
                   </dd>
@@ -383,7 +383,7 @@ export function ProductCatalogSection({
           className="group w-full bg-[#F5F7F9] hover:-translate-y-1 focus-within:border-[#0F766E] focus-within:ring-2 focus-within:ring-[#0F766E]/20"
         >
           <div className="p-6 flex flex-col flex-1">
-            <div className="flex items-center justify-between gap-2 text-xs font-medium text-[#657382]">
+            <div className="flex items-center justify-between gap-2 text-xs font-medium text-[#475569]">
               <span className="font-mono font-semibold text-[#0F766E]">
                 {entry.seriesCode}
               </span>
@@ -416,19 +416,19 @@ export function ProductCatalogSection({
 
             <dl className="mt-4 grid grid-cols-3 gap-2.5 rounded-md border border-[#DCE2E8] bg-white p-3 text-xs">
               <div>
-                <dt className="text-[#657382]">Wire Size</dt>
+                <dt className="text-[#475569]">Wire Size</dt>
                 <dd className="mt-0.5 font-mono font-semibold text-[#101D2B] tabular-nums">
                   {entry.wireRangeSummary}
                 </dd>
               </div>
               <div>
-                <dt className="text-[#657382]">Max Current</dt>
+                <dt className="text-[#475569]">Max Current</dt>
                 <dd className="mt-0.5 font-mono font-semibold text-[#101D2B] tabular-nums">
                   {entry.currentMaxSummary}
                 </dd>
               </div>
               <div>
-                <dt className="text-[#657382]">Voltage</dt>
+                <dt className="text-[#475569]">Voltage</dt>
                 <dd className="mt-0.5 font-mono font-semibold text-[#101D2B] tabular-nums">
                   {entry.voltageMaxSummary}
                 </dd>
@@ -519,7 +519,7 @@ export function ProductCatalogSection({
                   <label htmlFor="section-product-finder" className="sr-only">
                     Search terminal blocks by model, wire size, or rating
                   </label>
-                  <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#657382]" />
+                  <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#475569]" />
                   <input
                     id="section-product-finder"
                     type="search"

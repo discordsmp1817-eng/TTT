@@ -283,7 +283,7 @@ export function HomePage() {
                         data-stagger-item
                         className="rounded-md border border-[#DCE2E8] bg-[#F5F7F9] p-3.5 transition-colors duration-200 hover:border-[#0F766E]/50 hover:bg-white"
                       >
-                        <dt className="text-[11px] font-medium text-[#657382]">
+                        <dt className="text-[11px] font-medium text-[#475569]">
                           {metric.label}
                         </dt>
                         <dd className="mt-1 font-mono text-xl font-bold text-[#101D2B] tabular-nums">
@@ -415,7 +415,7 @@ export function HomePage() {
                     </div>
 
                     <div className="mt-7 border-t border-slate-200 pt-5">
-                      <div className="text-xs font-semibold text-[#64748B] mb-2.5">
+                      <div className="text-xs font-semibold text-[#475569] mb-2.5">
                         Recommended Terminal Series
                       </div>
                       <div className="flex flex-wrap gap-2">
@@ -427,7 +427,7 @@ export function HomePage() {
                             className="group inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-[#0F172A] hover:border-[#0F766E] hover:text-[#0F766E] transition-colors cursor-pointer min-h-[38px]"
                           >
                             <span>{rec.label}</span>
-                            <span className="font-mono text-[11px] text-[#64748B]">
+                            <span className="font-mono text-[11px] text-[#475569]">
                               {rec.series}
                             </span>
                             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -510,7 +510,7 @@ export function HomePage() {
                           <span className="font-mono font-bold text-[#0F766E]">
                             {cert.code}
                           </span>
-                          <span className="text-[#64748B]">{cert.verification}</span>
+                          <span className="text-[#475569]">{cert.verification}</span>
                         </div>
                         <h3 className="mt-2 font-display text-base font-bold text-[#0F172A]">
                           {cert.title}
@@ -592,7 +592,7 @@ export function HomePage() {
                   <MagneticButton
                     type="button"
                     onClick={() => navigate('/quote')}
-                    className="inline-flex items-center gap-2 rounded-lg bg-[#0D9488] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0F766E] transition-colors whitespace-nowrap cursor-pointer min-h-[44px]"
+                    className="inline-flex items-center gap-2 rounded-lg bg-[#0F766E] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0D9488] transition-colors whitespace-nowrap cursor-pointer min-h-[44px]"
                   >
                     <FileText className="h-4 w-4" />
                     <span>Request a Quote</span>

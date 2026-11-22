@@ -447,7 +447,7 @@ export function ImageReveal({
         imageShown = false;
         gsap.killTweensOf(wrap);
         gsap.killTweensOf(inner);
-        gsap.set(wrap, { clipPath: CLIP_INITIAL[direction], opacity: 0.15 });
+        gsap.set(wrap, { clipPath: CLIP_INITIAL[direction], opacity: immediate ? 1 : 0.15 });
         gsap.set(inner, { scale: 1.08 });
       };
 

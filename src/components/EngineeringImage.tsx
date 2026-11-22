@@ -9,6 +9,8 @@ interface EngineeringImageProps {
   fallbackTitle?: string;
   darkFallback?: boolean;
   priority?: boolean;
+  width?: number;
+  height?: number;
 }
 
 export function EngineeringImage({
@@ -18,6 +20,8 @@ export function EngineeringImage({
   fallbackTitle,
   darkFallback = false,
   priority = false,
+  width = 1080,
+  height = 810,
 }: EngineeringImageProps) {
   const [failed, setFailed] = useState(false);
 
@@ -45,6 +49,8 @@ export function EngineeringImage({
       <img
         src={resolveAssetUrl(src)}
         alt={alt}
+        width={width}
+        height={height}
         referrerPolicy="no-referrer"
         loading={priority ? 'eager' : 'lazy'}
         decoding="async"
