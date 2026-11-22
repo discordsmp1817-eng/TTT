@@ -83,3 +83,52 @@ export function getResponsiveColumnCount(
   if (width < 1024) return Math.min(2, maxColumns);
   return maxColumns;
 }
+
+export interface RectLike {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
+export interface LogoFlightTransform {
+  x: number;
+  y: number;
+  scale: number;
+}
+
+export function computeLogoFlightTransform(
+  source: RectLike,
+  target: RectLike
+): LogoFlightTransform {
+  const safeSourceWidth = Math.max(1, source.width);
+  const safeSourceHeight = Math.max(1, source.height);
+
+  const sourceCenterX = source.left + safeSourceWidth / 2;
+  const sourceCenterY = source.top + safeSourceHeight / 2;
+  const targetCenterX = target.left + target.width / 2;
+  const targetCenterY = target.top + target.height / 2;
+
+  const scale = target.width > 0 ? target.width / safeSourceWidth : 1;
+
+  return {
+    x: Math.round((targetCenterX - sourceCenterX) * 100) / 100,
+    y: Math.round((targetCenterY - sourceCenterY) * 100) / 100,
+    scale: Math.round(scale * 10000) / 10000,
+  };
+}
+
+export function computeScrollProgress(
+  scrollY: number,
+  scrollHeight: number,
+  viewportHeight: number
+): number {
+  const maxScroll = scrollHeight - viewportHeight;
+  if (!Number.isFinite(scrollY) || !Number.isFinite(maxScroll) || maxScroll <= 0) {
+    return 0;
+  }
+  const ratio = scrollY / maxScroll;
+  if (ratio <= 0) return 0;
+  if (ratio >= 1) return 1;
+  return Math.round(ratio * 10000) / 10000;
+}

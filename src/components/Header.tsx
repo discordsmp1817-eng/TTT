@@ -26,25 +26,84 @@ import {
 } from '../data/termicoreData';
 import { NavigationFilter, useApp } from '../context/AppContext';
 import { INDUSTRIAL_EASE, MagneticButton } from './MotionPrimitives';
+import { computeScrollProgress } from '../utils/scrollReveal';
 
-export function Header() {
+export function Header({ isLoading = false }: { isLoading?: boolean }) {
   const { route, navigate, rfqItems, openDrawer } = useApp();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedMobileGroup, setExpandedMobileGroup] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const headerContainerRef = useRef<HTMLDivElement>(null);
+  const progressTrackRef = useRef<HTMLDivElement>(null);
+  const progressFillRef = useRef<HTMLDivElement>(null);
+  const progressHeadRef = useRef<HTMLDivElement>(null);
+  const lastScrollYRef = useRef(0);
   const closeTimerRef = useRef<number | null>(null);
   const lastHoverOpenRef = useRef<number>(0);
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 20);
+    let rafId = 0;
+
+    const syncScrollVisuals = () => {
+      rafId = 0;
+      const y = window.scrollY;
+      setScrolled(y > 20);
+
+      const docEl = document.documentElement;
+      const progress = computeScrollProgress(y, docEl.scrollHeight, window.innerHeight);
+      const prevY = lastScrollYRef.current;
+      const delta = y - prevY;
+      lastScrollYRef.current = y;
+
+      const direction =
+        Math.abs(delta) < 0.5
+          ? progressTrackRef.current?.getAttribute('data-direction') || 'idle'
+          : delta > 0
+          ? 'forward'
+          : 'backward';
+
+      if (progressTrackRef.current) {
+        progressTrackRef.current.setAttribute('data-direction', direction);
+        progressTrackRef.current.setAttribute('data-progress', String(Math.round(progress * 100)));
+      }
+      if (progressFillRef.current) {
+        progressFillRef.current.style.transform = `scaleX(${progress})`;
+      }
+      if (progressHeadRef.current) {
+        const pct = progress * 100;
+        progressHeadRef.current.style.left = `clamp(6px, ${pct}%, calc(100% - 6px))`;
+        progressHeadRef.current.style.opacity = progress > 0.004 && !isLoading ? '1' : '0';
+        progressHeadRef.current.style.transform =
+          direction === 'backward'
+            ? 'translate(-50%, -50%) scaleX(-1)'
+            : 'translate(-50%, -50%) scaleX(1)';
+      }
     };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+
+    const scheduleSync = () => {
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(syncScrollVisuals);
+      }
+    };
+
+    syncScrollVisuals();
+    window.addEventListener('scroll', scheduleSync, { passive: true });
+    window.addEventListener('resize', scheduleSync, { passive: true });
+
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(scheduleSync);
+      resizeObserver.observe(document.body);
+    }
+
+    return () => {
+      if (rafId) window.cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', scheduleSync);
+      window.removeEventListener('resize', scheduleSync);
+      resizeObserver?.disconnect();
+    };
+  }, [route, isLoading]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -205,9 +264,14 @@ export function Header() {
           className="group flex items-center gap-2.5 sm:gap-3 text-left whitespace-nowrap shrink-0 cursor-pointer rounded"
           aria-label="TermiCore Home"
         >
-          <motion.div layoutId="nav-logo" className="flex items-center">
+          <div
+            data-navbar-logo
+            className={`flex items-center ${
+              isLoading ? 'opacity-0' : 'opacity-100'
+            }`}
+          >
             <TermiCoreLogo className="h-9 w-9 shrink-0 shadow-2xs transition-transform duration-300 group-hover:scale-105" />
-          </motion.div>
+          </div>
           <span className="font-display text-base sm:text-lg font-extrabold tracking-tight text-[#101D2B]">
             TermiCore
           </span>
@@ -658,6 +722,31 @@ export function Header() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Bi-directional Scroll-Linked Busbar Track Directly Under Navbar */}
+      <div
+        ref={progressTrackRef}
+        data-testid="navbar-scroll-track"
+        data-direction="idle"
+        data-progress="0"
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-x-0 bottom-0 h-[4px] bg-[#E2E8F0]/75 transition-opacity duration-300 ${
+          isLoading ? 'opacity-0' : 'opacity-100'
+        }`}
+      >
+        <div
+          ref={progressFillRef}
+          className="h-full w-full origin-left bg-gradient-to-r from-[#0F766E] via-[#0D9488] to-[#2DD4BF] will-change-transform"
+          style={{ transform: 'scaleX(0)' }}
+        />
+        <div
+          ref={progressHeadRef}
+          className="absolute top-1/2 flex h-3 w-4 items-center justify-center rounded-full bg-[#0F766E] shadow-[0_0_10px_rgba(13,148,136,0.65)] ring-2 ring-white transition-opacity duration-200 will-change-transform"
+          style={{ left: '0%', opacity: 0, transform: 'translate(-50%, -50%)' }}
+        >
+          <span className="h-1.5 w-1.5 rotate-45 border-t-[1.5px] border-r-[1.5px] border-white -ml-0.5" />
+        </div>
+      </div>
     </header>
   );
 }

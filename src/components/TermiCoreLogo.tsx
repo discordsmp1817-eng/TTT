@@ -3,7 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { useId } from 'react';
+
 export function TermiCoreLogo({ className = 'h-8 w-8' }: { className?: string }) {
+  const uid = useId().replace(/:/g, '');
+  const bgGradId = `tc-bg-${uid}`;
+  const accentGradId = `tc-accent-${uid}`;
+
   return (
     <svg
       className={className}
@@ -13,24 +19,43 @@ export function TermiCoreLogo({ className = 'h-8 w-8' }: { className?: string })
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="tc-grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#0D9488" />
-          <stop offset="1" stopColor="#0F172A" />
+        <linearGradient id={bgGradId} x1="4" y1="2" x2="36" y2="38" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#132234" />
+          <stop offset="1" stopColor="#09111A" />
+        </linearGradient>
+        <linearGradient id={accentGradId} x1="8" y1="8" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#5EEAD4" />
+          <stop offset="1" stopColor="#0D9488" />
         </linearGradient>
       </defs>
-      <rect width="40" height="40" rx="10" fill="url(#tc-grad)" />
-      {/* DIN Rail Profile Base */}
-      <path d="M8 29H32V32H8V29Z" fill="#334155" opacity="0.6" />
-      {/* Terminal Block Housing 1 */}
-      <rect x="9" y="8" width="8" height="18" rx="2" fill="#2DD4BF" />
-      {/* Terminal Block Housing 2 (Center) */}
-      <rect x="19" y="6" width="12" height="20" rx="2.5" fill="white" />
-      {/* Current Bar / Screw Accent */}
-      <circle cx="25" cy="12" r="2" fill="#0D9488" />
-      <path d="M22 17H28V19H22V17Z" fill="#0F766E" />
-      {/* Connection wire marker */}
-      <path d="M4 22H9" stroke="#2DD4BF" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M31 22H36" stroke="#2DD4BF" strokeWidth="2.5" strokeLinecap="round" />
+
+      {/* Outer precision housing badge with subtle metallic teal hairline */}
+      <rect x="1" y="1" width="38" height="38" rx="10" fill={`url(#${bgGradId})`} />
+      <rect x="1" y="1" width="38" height="38" rx="10" stroke="#2DD4BF" strokeOpacity="0.38" strokeWidth="1.25" />
+
+      {/* Left & Right incoming copper/teal conductor leads */}
+      <path d="M5 20H11" stroke={`url(#${accentGradId})`} strokeWidth="2.8" strokeLinecap="round" />
+      <path d="M29 20H35" stroke={`url(#${accentGradId})`} strokeWidth="2.8" strokeLinecap="round" />
+
+      {/* Inner terminal clamp U-saddle cradling the T core */}
+      <path
+        d="M11 16.5V23.5C11 25.433 12.567 27 14.5 27H25.5C27.433 27 29 25.433 29 23.5V16.5"
+        stroke={`url(#${accentGradId})`}
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      {/* Precision Interlocking 'T' Busbar Core */}
+      <path
+        d="M10.5 10.5H29.5V15H22.25V24.5H17.75V15H10.5V10.5Z"
+        fill="#FFFFFF"
+      />
+
+      {/* Center Torque Screw & DIN Rail Foot Notch */}
+      <circle cx="20" cy="12.75" r="1.45" fill="#0F766E" />
+      <path d="M14 31.5H26" stroke="#2DD4BF" strokeWidth="2.2" strokeLinecap="round" opacity="0.85" />
     </svg>
   );
 }
+

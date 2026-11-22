@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AppProvider, useApp } from './context/AppContext';
@@ -88,20 +88,23 @@ function renderPageRoute(route: string) {
 }
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    const params = new URLSearchParams(window.location.search);
+    return params.get('autostart') !== '1';
+  });
 
-  const handleLoaderComplete = () => {
+  const handleLoaderComplete = useCallback(() => {
     setIsLoading(false);
-    window.dispatchEvent(new CustomEvent('termicore:loader-done'));
     requestAnimationFrame(() => ScrollTrigger.refresh());
-  };
+  }, []);
 
   return (
     <MotionConfig reducedMotion="never">
       <AppProvider>
         <div className="min-h-screen flex flex-col bg-[#F5F7F9] text-[#101D2B] relative overflow-x-clip">
           {isLoading && <InitialLoader onComplete={handleLoaderComplete} />}
-          <Header />
+          <Header isLoading={isLoading} />
           <main className="flex-1 overflow-x-clip">
             <RouteView />
           </main>

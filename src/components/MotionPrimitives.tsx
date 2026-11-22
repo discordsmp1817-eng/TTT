@@ -67,18 +67,18 @@ export function attachBiDirectionalReveal(
 ): () => void {
   const {
     direction = 'down',
-    distance = 92,
-    duration = 0.96,
+    distance = 86,
+    duration = 0.78,
     delay = 0,
     scaleFrom = 1,
     blur = false,
-    start = 'top 86%',
-    end = 'bottom 18%',
+    start = 'top 92%',
+    end = 'bottom 10%',
   } = options;
 
   const effectiveDistance = getEffectiveDistance(direction, distance);
   const { x, y } = getDirectionOffset(direction, effectiveDistance);
-  const hiddenFilter = blur ? 'blur(6px)' : 'blur(0px)';
+  const hiddenFilter = blur ? 'blur(5px)' : 'blur(0px)';
 
   let currentState: 'shown' | 'hidden' = 'hidden';
   let settleTimer: number | null = null;
@@ -121,7 +121,7 @@ export function attachBiDirectionalReveal(
       filter: 'blur(0px)',
       duration,
       delay: customDelay,
-      ease: 'power2.out',
+      ease: 'power3.out',
       overwrite: 'auto',
       onComplete: () => {
         if (currentState === 'shown') {
@@ -148,15 +148,15 @@ export function attachBiDirectionalReveal(
     const atTop = window.scrollY <= 6;
     const atBottom = window.scrollY + vh >= docEl.scrollHeight - 8;
 
-    const topCutoff = allowEdgeMargin ? vh * 0.98 : vh * 0.86;
-    const bottomCutoff = allowEdgeMargin ? vh * 0.02 : vh * 0.16;
+    const topCutoff = allowEdgeMargin ? vh * 0.995 : vh * 0.96;
+    const bottomCutoff = allowEdgeMargin ? vh * 0.005 : vh * 0.04;
     const inRevealBand = layoutTop < topCutoff && layoutBottom > bottomCutoff;
     const visibleAtEdge =
       (atTop && layoutTop < vh && layoutBottom > 0) ||
       (atBottom && layoutTop < vh && layoutBottom > 0);
 
     if (inRevealBand || visibleAtEdge) {
-      playReveal(delay);
+      playReveal(layoutTop < 80 ? Math.min(delay, 0.04) : delay);
     } else if (layoutBottom <= -12 || layoutTop >= vh + 12) {
       setHidden();
     }
@@ -169,7 +169,7 @@ export function attachBiDirectionalReveal(
     }
     settleTimer = window.setTimeout(() => {
       checkEdgeVisibility(true);
-    }, 200);
+    }, 120);
   };
 
   const revealTrigger = ScrollTrigger.create({
@@ -177,7 +177,7 @@ export function attachBiDirectionalReveal(
     start,
     end,
     onEnter: () => playReveal(delay),
-    onEnterBack: () => playReveal(delay),
+    onEnterBack: () => playReveal(Math.min(delay, 0.04)),
   });
 
   // Reset only once element is 100% off-screen above or below viewport (with 12px buffer)
@@ -246,7 +246,7 @@ export function RevealBlock({
   className = '',
   direction = 'down',
   distance,
-  duration = 0.96,
+  duration = 0.78,
   delay = 0,
   y,
   blur = false,
@@ -256,10 +256,10 @@ export function RevealBlock({
 
   const resolvedDistance =
     distance !== undefined
-      ? Math.max(distance, 76)
+      ? Math.max(distance, 48)
       : y !== undefined
-      ? Math.max(Math.abs(y), 76)
-      : 92;
+      ? Math.max(Math.abs(y), 48)
+      : 86;
 
   useEffect(() => {
     const el = ref.current;
@@ -307,11 +307,11 @@ export function StaggerGrid({
   itemSelector = '[data-stagger-item]',
   pattern = 'quad',
   columns = 3,
-  stagger = 0.1,
+  stagger = 0.08,
   distance,
-  duration = 0.94,
+  duration = 0.78,
   y,
-  scaleFrom = 0.93,
+  scaleFrom = 0.94,
 }: StaggerGridProps) {
   const ref = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
@@ -319,10 +319,10 @@ export function StaggerGrid({
     distance !== undefined
       ? distance <= 36
         ? distance
-        : Math.max(distance, 84)
+        : Math.max(distance, 64)
       : y !== undefined
-      ? Math.max(Math.abs(y), 84)
-      : 90;
+      ? Math.max(Math.abs(y), 64)
+      : 86;
 
   useEffect(() => {
     const el = ref.current;
@@ -408,9 +408,12 @@ export function ImageReveal({
     const inner = innerRef.current;
     if (!wrap || !inner || reducedMotion) return;
 
+    let removeLoaderListener = () => {};
+
     const ctx = gsap.context(() => {
       let imageShown = false;
       const playImageIn = () => {
+        if (isInitialLoaderActive()) return;
         if (imageShown) return;
         imageShown = true;
         gsap.fromTo(
@@ -419,7 +422,7 @@ export function ImageReveal({
           {
             clipPath: 'inset(0% 0% 0% 0%)',
             opacity: 1,
-            duration: 0.9,
+            duration: 0.85,
             delay,
             ease: 'power3.out',
             overwrite: 'auto',
@@ -431,7 +434,7 @@ export function ImageReveal({
           { scale: 1.08 },
           {
             scale: 1,
-            duration: 1.0,
+            duration: 0.95,
             delay,
             ease: 'power3.out',
             overwrite: 'auto',
@@ -448,33 +451,50 @@ export function ImageReveal({
         gsap.set(inner, { scale: 1.08 });
       };
 
+      const checkInitialImage = () => {
+        if (isInitialLoaderActive()) return;
+        if (immediate) {
+          playImageIn();
+          return;
+        }
+        const vh = window.innerHeight || 900;
+        const r = wrap.getBoundingClientRect();
+        if (r.top < vh * 0.94 && r.bottom > vh * 0.06) {
+          playImageIn();
+        }
+      };
+
+      resetImage();
+
       if (immediate) {
-        playImageIn();
+        if (!isInitialLoaderActive()) {
+          playImageIn();
+        }
       } else {
-        resetImage();
-        const checkInitialImage = () => {
-          const vh = window.innerHeight || 900;
-          const r = wrap.getBoundingClientRect();
-          if (r.top < vh * 0.97 && r.bottom > vh * 0.03) {
-            playImageIn();
-          }
-        };
         ScrollTrigger.create({
           trigger: wrap,
-          start: 'top 97%',
-          end: 'bottom 3%',
+          start: 'top 93%',
+          end: 'bottom 8%',
           onEnter: playImageIn,
           onEnterBack: playImageIn,
         });
         ScrollTrigger.create({
           trigger: wrap,
-          start: 'top bottom+=8',
-          end: 'bottom top-=8',
+          start: 'top bottom+=10',
+          end: 'bottom top-=10',
           onLeave: resetImage,
           onLeaveBack: resetImage,
         });
         checkInitialImage();
       }
+
+      const onLoaderDone = () => {
+        ScrollTrigger.refresh();
+        checkInitialImage();
+      };
+      window.addEventListener('termicore:loader-done', onLoaderDone);
+      removeLoaderListener = () =>
+        window.removeEventListener('termicore:loader-done', onLoaderDone);
 
       if (parallax && !isTouch && !immediate) {
         gsap.fromTo(
@@ -497,6 +517,7 @@ export function ImageReveal({
     const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
     return () => {
       cancelAnimationFrame(raf);
+      removeLoaderListener();
       ctx.revert();
     };
   }, [direction, delay, immediate, parallax, reducedMotion, isTouch]);
@@ -536,8 +557,11 @@ export function EngineeringRule({
     const line = lineRef.current;
     if (!wrap || !line || reducedMotion) return;
 
+    let removeLoaderListener = () => {};
+
     const ctx = gsap.context(() => {
       const draw = () => {
+        if (isInitialLoaderActive()) return;
         gsap.fromTo(
           line,
           { scaleX: 0 },
@@ -552,33 +576,56 @@ export function EngineeringRule({
         );
       };
 
+      const checkDraw = () => {
+        if (isInitialLoaderActive()) return;
+        if (immediate) {
+          draw();
+          return;
+        }
+        const vh = window.innerHeight || 900;
+        const r = wrap.getBoundingClientRect();
+        if (r.top < vh * 0.94 && r.bottom > vh * 0.06) {
+          draw();
+        }
+      };
+
+      gsap.set(line, { scaleX: 0 });
+
       if (immediate) {
-        draw();
+        if (!isInitialLoaderActive()) {
+          draw();
+        }
       } else {
-        gsap.set(line, { scaleX: 0 });
         ScrollTrigger.create({
           trigger: wrap,
-          start: 'top 97%',
-          end: 'bottom 3%',
+          start: 'top 93%',
+          end: 'bottom 8%',
           onEnter: draw,
           onEnterBack: draw,
         });
         ScrollTrigger.create({
           trigger: wrap,
-          start: 'top bottom+=8',
-          end: 'bottom top-=8',
+          start: 'top bottom+=10',
+          end: 'bottom top-=10',
           onLeave: () => gsap.set(line, { scaleX: 0 }),
           onLeaveBack: () => gsap.set(line, { scaleX: 0 }),
         });
-        const vh = window.innerHeight || 900;
-        const r = wrap.getBoundingClientRect();
-        if (r.top < vh * 0.97 && r.bottom > vh * 0.03) {
-          draw();
-        }
+        checkDraw();
       }
+
+      const onLoaderDone = () => {
+        ScrollTrigger.refresh();
+        checkDraw();
+      };
+      window.addEventListener('termicore:loader-done', onLoaderDone);
+      removeLoaderListener = () =>
+        window.removeEventListener('termicore:loader-done', onLoaderDone);
     }, wrapRef);
 
-    return () => ctx.revert();
+    return () => {
+      removeLoaderListener();
+      ctx.revert();
+    };
   }, [immediate, delay, reducedMotion]);
 
   return (

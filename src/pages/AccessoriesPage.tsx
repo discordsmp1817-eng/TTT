@@ -133,8 +133,8 @@ export function AccessoriesPage() {
     const cleanups = rows.map((row, idx) =>
       attachBiDirectionalReveal(row, {
         direction: getGridItemDirection(idx, 'alternating-lr'),
-        distance: 32,
-        duration: 0.72,
+        distance: 48,
+        duration: 0.76,
         delay: Math.min(idx % 6, 4) * 0.04,
       })
     );
@@ -319,8 +319,8 @@ export function AccessoriesPage() {
                   key={`acc-grid-${selectedCategory}-${selectedSeriesId}-${selectedNecessity}-${searchQuery}-${paginated.currentPage}`}
                   pattern="columns"
                   columns={3}
-                  stagger={0.08}
-                  distance={50}
+                  stagger={0.07}
+                  distance={72}
                   data-testid="accessories-grid"
                   className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
                 >

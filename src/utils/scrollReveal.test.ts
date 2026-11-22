@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  computeLogoFlightTransform,
+  computeScrollProgress,
   getDirectionOffset,
   getGridItemDirection,
   getResponsiveColumnCount,
@@ -53,4 +55,23 @@ test('getResponsiveColumnCount scales down gracefully for mobile and tablet widt
   assert.equal(getResponsiveColumnCount(768, 4), 2);
   assert.equal(getResponsiveColumnCount(1280, 4), 4);
   assert.equal(getResponsiveColumnCount(1280, 3), 3);
+});
+
+test('computeLogoFlightTransform computes exact center-to-navbar delta and scale', () => {
+  const source = { left: 672, top: 402, width: 96, height: 96 };
+  const target = { left: 96, top: 16, width: 36, height: 36 };
+  assert.deepEqual(computeLogoFlightTransform(source, target), {
+    x: -606,
+    y: -416,
+    scale: 0.375,
+  });
+});
+
+test('computeScrollProgress maps scroll offset to clamped 0..1 progress', () => {
+  assert.equal(computeScrollProgress(0, 3000, 900), 0);
+  assert.equal(computeScrollProgress(1050, 3000, 900), 0.5);
+  assert.equal(computeScrollProgress(2100, 3000, 900), 1);
+  assert.equal(computeScrollProgress(-40, 3000, 900), 0);
+  assert.equal(computeScrollProgress(2500, 3000, 900), 1);
+  assert.equal(computeScrollProgress(100, 800, 900), 0);
 });

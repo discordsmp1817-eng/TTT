@@ -53,54 +53,54 @@ export function HomePage() {
         const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
         tl.from('[data-hero-kicker]', {
-          y: 16,
+          y: 14,
           opacity: 0,
-          duration: 0.65,
+          duration: 0.48,
           clearProps: 'transform,opacity',
         })
           .from(
             '[data-hero-word]',
             {
-              yPercent: 108,
+              yPercent: 105,
               opacity: 0,
-              duration: 0.8,
-              stagger: 0.1,
+              duration: 0.62,
+              stagger: 0.08,
               clearProps: 'transform,opacity',
             },
-            '-=0.35'
+            '-=0.3'
           )
           .from(
             '[data-hero-sub]',
             {
-              y: 18,
+              y: 14,
               opacity: 0,
               filter: 'blur(4px)',
-              duration: 0.7,
+              duration: 0.55,
               clearProps: 'transform,opacity,filter',
-            },
-            '-=0.45'
-          )
-          .from(
-            '[data-hero-cta]',
-            {
-              y: 16,
-              opacity: 0,
-              duration: 0.6,
-              stagger: 0.09,
-              clearProps: 'transform,opacity',
             },
             '-=0.38'
           )
           .from(
-            '[data-hero-std]',
+            '[data-hero-cta]',
             {
               y: 12,
               opacity: 0,
-              duration: 0.5,
-              stagger: 0.06,
+              duration: 0.48,
+              stagger: 0.07,
               clearProps: 'transform,opacity',
             },
-            '-=0.3'
+            '-=0.32'
+          )
+          .from(
+            '[data-hero-std]',
+            {
+              y: 10,
+              opacity: 0,
+              duration: 0.4,
+              stagger: 0.05,
+              clearProps: 'transform,opacity',
+            },
+            '-=0.26'
           );
 
         gsap.to('[data-hero-float]', {
@@ -358,8 +358,7 @@ export function HomePage() {
             </RevealBlock>
           </div>
 
-          <RevealBlock direction="down" distance={84}>
-            <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait">
             <motion.div
               key={activeSector.id}
               initial={{ opacity: 0, y: 10 }}
@@ -369,21 +368,28 @@ export function HomePage() {
             >
               <GlowCard variant="light" className="p-5 sm:p-8 border-slate-200">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-stretch">
-                  <ImageReveal
-                    key={activeSector.image}
-                    direction="left"
-                    immediate
-                    className="lg:col-span-7 rounded-md border border-slate-200 bg-[#EEF2F6] aspect-[16/9] lg:aspect-auto lg:min-h-[340px]"
-                  >
-                    <EngineeringImage
-                      src={activeSector.image}
-                      alt={activeSector.imageAlt}
-                      fallbackTitle={activeSector.title}
-                      className="h-full w-full object-cover"
-                    />
-                  </ImageReveal>
+                  <RevealBlock direction="left" distance={78} className="lg:col-span-7 flex">
+                    <ImageReveal
+                      key={activeSector.image}
+                      direction="left"
+                      immediate
+                      className="w-full rounded-md border border-slate-200 bg-[#EEF2F6] aspect-[16/9] lg:aspect-auto lg:min-h-[340px]"
+                    >
+                      <EngineeringImage
+                        src={activeSector.image}
+                        alt={activeSector.imageAlt}
+                        fallbackTitle={activeSector.title}
+                        className="h-full w-full object-cover"
+                      />
+                    </ImageReveal>
+                  </RevealBlock>
 
-                  <div className="lg:col-span-5 flex flex-col justify-between">
+                  <RevealBlock
+                    direction="right"
+                    distance={78}
+                    delay={0.08}
+                    className="lg:col-span-5 flex flex-col justify-between"
+                  >
                     <div>
                       <div className="font-mono text-xs font-semibold text-[#0F766E]">
                         {activeSector.subtitle}
@@ -429,12 +435,11 @@ export function HomePage() {
                         ))}
                       </div>
                     </div>
-                  </div>
+                  </RevealBlock>
                 </div>
               </GlowCard>
             </motion.div>
           </AnimatePresence>
-          </RevealBlock>
         </div>
       </section>
 
@@ -445,32 +450,39 @@ export function HomePage() {
       >
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
-            <RevealBlock direction="left" distance={92} className="lg:col-span-5" blur>
-              <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
-                Our Commitment
-              </p>
-              <h2 className="mt-2 font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#0F172A] text-balance">
-                Uncompromising Quality &amp; Global Compliance
-              </h2>
-              <p className="mt-4 text-base leading-relaxed text-[#475569]">
-                Every terminal block undergoes dielectric, mechanical pull-out, vibration, and thermal cycling checks to satisfy international panel standards.
-              </p>
+            <div className="lg:col-span-5">
+              <RevealBlock direction="left" distance={86} blur>
+                <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
+                  Our Commitment
+                </p>
+                <h2 className="mt-2 font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#0F172A] text-balance">
+                  Uncompromising Quality &amp; Global Compliance
+                </h2>
+                <p className="mt-4 text-base leading-relaxed text-[#475569]">
+                  Every terminal block undergoes dielectric, mechanical pull-out, vibration, and thermal cycling checks to satisfy international panel standards.
+                </p>
+              </RevealBlock>
 
-              <ul className="mt-6 space-y-3 text-sm text-[#0F172A]">
+              <RevealBlock
+                direction="left"
+                distance={68}
+                delay={0.08}
+                className="mt-6 space-y-3 text-sm text-[#0F172A]"
+              >
                 {[
                   'Rigorous Quality Testing across every production batch',
                   'Electrolytic copper bars & UL 94 V-0 polyamide housings',
                   'Full compliance across IEC, UL, CE, RoHS, and ATEX series',
                   'Built for long-term thermal and mechanical stability',
                 ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5">
+                  <div key={item} className="flex items-start gap-2.5">
                     <ShieldCheck className="h-4 w-4 text-[#0F766E] shrink-0 mt-0.5" />
                     <span>{item}</span>
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </RevealBlock>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <RevealBlock direction="down" distance={54} delay={0.12} className="mt-8 flex flex-wrap gap-3">
                 <MagneticButton
                   type="button"
                   onClick={() => navigate('/quality')}
@@ -479,8 +491,8 @@ export function HomePage() {
                   <span>View Testing &amp; Approvals</span>
                   <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
                 </MagneticButton>
-              </div>
-            </RevealBlock>
+              </RevealBlock>
+            </div>
 
             <StaggerGrid
               className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4"

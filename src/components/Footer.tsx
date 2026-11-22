@@ -28,8 +28,8 @@ export function Footer() {
         <StaggerGrid
           pattern="columns"
           columns={4}
-          distance={36}
-          duration={0.85}
+          distance={64}
+          duration={0.8}
           stagger={0.07}
           className="grid grid-cols-1 gap-9 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-[1.22fr_0.65fr_1.12fr_1.15fr_1.18fr_1.12fr] xl:gap-5"
         >
@@ -196,8 +196,8 @@ export function Footer() {
         {/* Bottom Bar */}
         <RevealBlock
           direction="up"
-          distance={24}
-          duration={0.85}
+          distance={48}
+          duration={0.8}
           className="mt-12 border-t border-[#243447] pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#94A3B8]"
         >
           <div>&copy; {new Date().getFullYear()} TermiCore Industrial Connectivity. All rights reserved.</div>

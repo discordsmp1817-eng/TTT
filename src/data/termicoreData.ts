@@ -110,7 +110,7 @@ export const CONTACT_INFO = {
 };
 
 export const IMAGES = {
-  logo: 'images/termicore_logo_1794579091329.jpg',
+  logo: 'favicon.svg',
   heroDinRail: 'images/din_rail_block_isolated_1795328371635.jpg',
   controlCabinet: 'images/app_control_cabinet_1794553742856.jpg',
   springCage: 'images/spring_block_isolated_1795328372895.jpg',
