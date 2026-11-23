@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Trash2, ArrowRight, CheckCircle2, Mail } from 'lucide-react';
+import { X, Trash2, ArrowRight, CheckCircle2, Mail, FileSpreadsheet } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useApp } from '../context/AppContext';
 import {
@@ -92,23 +92,33 @@ export function RfqDrawer() {
             className="flex h-full w-full max-w-md flex-col bg-white shadow-2xl border-l border-[#DCE2E8]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-[#DCE2E8] px-6 py-4 bg-[#101D2B] text-white">
-              <div>
-                <h2 className="font-display text-lg font-bold text-white">
-                  Quick RFQ Queue
-                </h2>
-                <p className="text-xs text-[#94A3B8]">
-                  {rfqItems.length} {rfqItems.length === 1 ? 'item' : 'items'} selected for quotation
-                </p>
+            <div className="flex items-center justify-between border-b border-[#243447] px-6 py-5 bg-[#101D2B] text-white shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#0F766E]/25 border border-[#0F766E]/40">
+                  <FileSpreadsheet className="h-5 w-5 text-[#2DD4BF]" />
+                </div>
+                <div>
+                  <div className="font-mono text-[10px] font-semibold tracking-wider uppercase text-[#2DD4BF]">
+                    B2B Order Queue
+                  </div>
+                  <h2 className="font-display text-base font-bold text-white leading-snug">
+                    Quick RFQ Drawer
+                  </h2>
+                </div>
               </div>
-              <button
-                type="button"
-                aria-label="Close RFQ drawer"
-                onClick={resetAndClose}
-                className="rounded-md p-2 text-[#CBD5E1] hover:bg-[#1E2E3F] hover:text-white transition-colors cursor-pointer min-h-[40px] min-w-[40px] flex items-center justify-center"
-              >
-                <X className="h-5 w-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-[#0F766E]/30 border border-[#0F766E]/40 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[#2DD4BF] tabular-nums">
+                  {rfqItems.length} {rfqItems.length === 1 ? 'item' : 'items'}
+                </span>
+                <button
+                  type="button"
+                  aria-label="Close RFQ drawer"
+                  onClick={resetAndClose}
+                  className="rounded-lg p-2 text-[#94A3B8] hover:bg-[#1E2E3F] hover:text-white transition-colors cursor-pointer min-h-[40px] min-w-[40px] flex items-center justify-center"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 overflow-y-auto px-6 py-5">

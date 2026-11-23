@@ -243,15 +243,16 @@ export function buildWeb3FormsPayload(params: {
   message: string;
   fields?: Record<string, string>;
 }): Record<string, string> {
+  const customFields = params.fields || {};
   return {
     access_key: params.accessKey,
     subject: params.subject,
     name: params.fromName,
-    from_name: 'TermiCore Website',
+    from_name: 'TermiCore Inquiry Desk',
     email: params.replyTo,
     replyto: params.replyTo,
     message: params.message,
-    ...(params.fields || {}),
+    ...customFields,
   };
 }
 

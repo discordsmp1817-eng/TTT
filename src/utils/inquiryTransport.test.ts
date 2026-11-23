@@ -36,7 +36,7 @@ test('submitContactInquiry sends exclusively to Web3Forms with formatted fields'
   assert.equal(calls[0].body.name, 'Rajesh Kulkarni');
   assert.equal(calls[0].body.email, 'rajesh@switchgear.example');
   assert.equal(calls[0].body.replyto, 'rajesh@switchgear.example');
-  assert.equal(calls[0].body.Topic, 'Technical Specification / CAD Request');
+  assert.equal(calls[0].body.Inquiry_Topic, 'Technical Specification / CAD Request');
   assert.match(result.referenceId, /^INQ-\d{4}-/);
   assert.equal(result.emailStatus, 'sent');
 });

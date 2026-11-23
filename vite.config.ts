@@ -8,8 +8,7 @@ export default defineConfig(({ command }) => {
   const base =
     command === 'serve'
       ? '/'
-      : process.env.VITE_BASE_PATH ||
-        (process.env.GITHUB_ACTIONS ? `/${repoName}/` : '/');
+      : process.env.VITE_BASE_PATH || '/';
 
   return {
     base,
