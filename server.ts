@@ -135,8 +135,8 @@ function sanitizeItems(rawItems: unknown): RfqLineItem[] {
 
 interface EmailDeliveryOutcome {
   emailDelivered: boolean;
-  emailProvider: 'smtp' | 'resend' | 'formsubmit' | 'none';
-  emailStatus: 'sent' | 'activation_required' | 'queued_locally';
+  emailProvider: 'smtp' | 'resend' | 'none';
+  emailStatus: 'sent' | 'queued_locally';
   recipientEmail: string;
 }
 
@@ -145,8 +145,6 @@ async function deliverInquiryEmail(params: {
   text: string;
   html: string;
   replyTo: string;
-  formSubmitPayload: Record<string, string>;
-  originHeader?: string;
 }): Promise<EmailDeliveryOutcome> {
   const smtpUser = process.env.SMTP_USER?.trim();
   const smtpPass = process.env.SMTP_PASS?.trim();
@@ -216,57 +214,6 @@ async function deliverInquiryEmail(params: {
       console.error('Resend API email delivery failed:', resendRes.status, errText);
     } catch (err) {
       console.error('Resend API request error:', err);
-    }
-  }
-
-  // Silent FormSubmit relay fallback when SMTP/Resend env vars are unset
-  if (process.env.ENABLE_FORMSUBMIT_RELAY !== 'false') {
-    try {
-      const referer =
-        params.originHeader && !params.originHeader.includes('localhost')
-          ? params.originHeader
-          : 'https://termicore-inquiries.github.io/';
-      const relayRes = await fetch(
-        `https://formsubmit.co/ajax/${encodeURIComponent(RECIPIENT_EMAIL)}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Origin: referer,
-            Referer: referer,
-          },
-          body: JSON.stringify(params.formSubmitPayload),
-        }
-      );
-
-      const relayData = (await relayRes.json().catch(() => ({}))) as {
-        success?: boolean | string;
-        message?: string;
-      };
-
-      const isSuccess = relayData.success === true || relayData.success === 'true';
-      if (relayRes.ok && isSuccess) {
-        return {
-          emailDelivered: true,
-          emailProvider: 'formsubmit',
-          emailStatus: 'sent',
-          recipientEmail: RECIPIENT_EMAIL,
-        };
-      }
-
-      const relayMsg = String(relayData.message || '');
-      if (relayMsg.toLowerCase().includes('activat')) {
-        console.info(`FormSubmit activation pending for ${RECIPIENT_EMAIL}.`);
-        return {
-          emailDelivered: false,
-          emailProvider: 'formsubmit',
-          emailStatus: 'activation_required',
-          recipientEmail: RECIPIENT_EMAIL,
-        };
-      }
-    } catch (err) {
-      console.error('FormSubmit relay error:', err);
     }
   }
 
@@ -413,8 +360,6 @@ async function startServer() {
       text: formatted.text,
       html: formatted.html,
       replyTo: email,
-      formSubmitPayload: formatted.formSubmitPayload,
-      originHeader: req.get('origin') || req.get('referer'),
     });
 
     res.status(201).json({
@@ -472,8 +417,6 @@ async function startServer() {
       text: formatted.text,
       html: formatted.html,
       replyTo: email,
-      formSubmitPayload: formatted.formSubmitPayload,
-      originHeader: req.get('origin') || req.get('referer'),
     });
 
     res.status(201).json({
@@ -531,8 +474,6 @@ async function startServer() {
       text: formatted.text,
       html: formatted.html,
       replyTo: email,
-      formSubmitPayload: formatted.formSubmitPayload,
-      originHeader: req.get('origin') || req.get('referer'),
     });
 
     res.status(201).json({

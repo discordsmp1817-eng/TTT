@@ -37,7 +37,6 @@ export function Header({ isLoading = false }: { isLoading?: boolean }) {
   const headerContainerRef = useRef<HTMLDivElement>(null);
   const progressTrackRef = useRef<HTMLDivElement>(null);
   const progressFillRef = useRef<HTMLDivElement>(null);
-  const progressHeadRef = useRef<HTMLDivElement>(null);
   const lastScrollYRef = useRef(0);
   const closeTimerRef = useRef<number | null>(null);
   const lastHoverOpenRef = useRef<number>(0);
@@ -69,15 +68,6 @@ export function Header({ isLoading = false }: { isLoading?: boolean }) {
       }
       if (progressFillRef.current) {
         progressFillRef.current.style.transform = `scaleX(${progress})`;
-      }
-      if (progressHeadRef.current) {
-        const pct = progress * 100;
-        progressHeadRef.current.style.left = `clamp(6px, ${pct}%, calc(100% - 6px))`;
-        progressHeadRef.current.style.opacity = progress > 0.004 && !isLoading ? '1' : '0';
-        progressHeadRef.current.style.transform =
-          direction === 'backward'
-            ? 'translate(-50%, -50%) scaleX(-1)'
-            : 'translate(-50%, -50%) scaleX(1)';
       }
     };
 
@@ -740,13 +730,6 @@ export function Header({ isLoading = false }: { isLoading?: boolean }) {
           className="h-full w-full origin-left bg-gradient-to-r from-[#0F766E] via-[#0D9488] to-[#2DD4BF] will-change-transform"
           style={{ transform: 'scaleX(0)' }}
         />
-        <div
-          ref={progressHeadRef}
-          className="absolute top-1/2 flex h-3 w-4 items-center justify-center rounded-full bg-[#0F766E] shadow-[0_0_10px_rgba(13,148,136,0.65)] ring-2 ring-white transition-opacity duration-200 will-change-transform"
-          style={{ left: '0%', opacity: 0, transform: 'translate(-50%, -50%)' }}
-        >
-          <span className="h-1.5 w-1.5 rotate-45 border-t-[1.5px] border-r-[1.5px] border-white -ml-0.5" />
-        </div>
       </div>
     </header>
   );

@@ -127,23 +127,7 @@ export function buildQuoteEmailContent(payload: QuoteEmailPayload) {
     </div>
   `;
 
-  const formSubmitPayload: Record<string, string> = {
-    _subject: subject,
-    _replyto: payload.email,
-    _template: 'table',
-    _captcha: 'false',
-    Reference_ID: payload.referenceId,
-    Contact_Name: payload.name,
-    Company_Name: payload.company,
-    Work_Email: payload.email,
-    Phone_Number: payload.phone || 'Not provided',
-    Total_Units: `${payload.totalUnits} pcs (${payload.items.length} items)`,
-    Queued_Items: itemsText,
-    Technical_Notes: payload.notes || 'None provided',
-    Submitted_At: payload.createdAt,
-  };
-
-  return { subject, text, html, formSubmitPayload };
+  return { subject, text, html };
 }
 
 export function buildContactEmailContent(payload: ContactEmailPayload) {
@@ -181,21 +165,7 @@ export function buildContactEmailContent(payload: ContactEmailPayload) {
     </div>
   `;
 
-  const formSubmitPayload: Record<string, string> = {
-    _subject: subject,
-    _replyto: payload.email,
-    _template: 'table',
-    _captcha: 'false',
-    Reference_ID: payload.referenceId,
-    Full_Name: payload.name,
-    Work_Email: payload.email,
-    Phone_Number: payload.phone || 'Not provided',
-    Inquiry_Topic: payload.subject,
-    Message: payload.message,
-    Submitted_At: payload.createdAt,
-  };
-
-  return { subject, text, html, formSubmitPayload };
+  return { subject, text, html };
 }
 
 export function buildRfqEmailContent(payload: RfqEmailPayload) {
@@ -253,20 +223,7 @@ export function buildRfqEmailContent(payload: RfqEmailPayload) {
     </div>
   `;
 
-  const formSubmitPayload: Record<string, string> = {
-    _subject: subject,
-    _replyto: payload.email,
-    _template: 'table',
-    _captcha: 'false',
-    Reference_ID: payload.referenceId,
-    Company: payload.company,
-    Work_Email: payload.email,
-    Total_Units: `${payload.totalUnits} pcs`,
-    Queued_Items: itemsText,
-    Submitted_At: payload.createdAt,
-  };
-
-  return { subject, text, html, formSubmitPayload };
+  return { subject, text, html };
 }
 
 export function buildMailtoHref(

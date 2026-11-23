@@ -17,7 +17,7 @@ test('escapeHtml neutralizes HTML injection characters', () => {
   );
 });
 
-test('buildQuoteEmailContent formats subject, line items, and FormSubmit fields', () => {
+test('buildQuoteEmailContent formats subject, line items, and technical notes cleanly', () => {
   const result = buildQuoteEmailContent({
     referenceId: 'QT-2026-AB12CD',
     name: 'Aarav Patel',
@@ -45,8 +45,6 @@ test('buildQuoteEmailContent formats subject, line items, and FormSubmit fields'
   assert.match(result.text, /TSC 4 — TSC 4 Feed-Through Block/);
   assert.match(result.text, /250 pcs/);
   assert.match(result.html, /Apex Switchgear/);
-  assert.equal(result.formSubmitPayload._replyto, 'aarav@apex.example');
-  assert.equal(result.formSubmitPayload.Company_Name, 'Apex Switchgear');
 });
 
 test('buildContactEmailContent handles empty phone safely', () => {
@@ -61,8 +59,8 @@ test('buildContactEmailContent handles empty phone safely', () => {
   });
 
   assert.match(result.text, /Phone Number: Not provided/);
+  assert.match(result.text, /Topic: Sample Kit Request/);
   assert.match(result.text, /Please send TSC 2\.5 samples\./);
-  assert.equal(result.formSubmitPayload.Inquiry_Topic, 'Sample Kit Request');
 });
 
 test('buildRfqEmailContent includes item summary and quantity', () => {
@@ -110,4 +108,3 @@ test('buildWeb3FormsPayload constructs clean relay JSON fields', () => {
   assert.equal(payload.Reference_ID, 'INQ-1');
   assert.equal('botcheck' in payload, false);
 });
-
