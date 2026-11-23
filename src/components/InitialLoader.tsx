@@ -143,7 +143,7 @@ export function InitialLoader({ onComplete }: { onComplete: () => void }) {
         data-testid="loader-flying-logo"
         className="relative z-10 flex h-24 w-24 items-center justify-center will-change-transform"
       >
-        <TermiCoreLogo className="h-24 w-24 shadow-2xl" />
+        <TermiCoreLogo className="h-24 w-24" />
       </div>
     </div>
   );

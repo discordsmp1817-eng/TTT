@@ -129,16 +129,9 @@ export function RfqDrawer() {
                     </div>
                   )}
                   <p className="mt-2 text-sm text-[#475569]">
-                    {submissionInfo?.emailStatus === 'sent'
-                      ? `Your RFQ details have been sent to ${submissionInfo.recipientEmail}. We will reply to `
-                      : 'Your selected terminal block specifications have been queued for our sales engineering team. We will reply to '}
+                    Your selected terminal block specifications have been received by our sales engineering team. We will reply to{' '}
                     <span className="font-medium text-[#0F172A]">{email}</span>.
                   </p>
-                  {submissionInfo?.emailMessage && (
-                    <p className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
-                      {submissionInfo.emailMessage}
-                    </p>
-                  )}
                   <div className="mt-5 space-y-2">
                     <button
                       type="button"

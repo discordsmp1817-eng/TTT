@@ -1,4 +1,4 @@
-export const OWNER_INBOX_EMAIL = 'gaurangambulkar@gmail.com';
+export const OWNER_INBOX_EMAIL = 'gaurangambulkar2@gmail.com';
 
 export interface EmailLineItem {
   id: string;
@@ -277,3 +277,23 @@ export function buildMailtoHref(
   const safeBody = body.length > 1500 ? `${body.slice(0, 1497)}...` : body;
   return `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(safeBody)}`;
 }
+
+export function buildWeb3FormsPayload(params: {
+  accessKey: string;
+  subject: string;
+  fromName: string;
+  replyTo: string;
+  message: string;
+  fields?: Record<string, string>;
+}): Record<string, string> {
+  return {
+    access_key: params.accessKey,
+    subject: params.subject,
+    from_name: params.fromName,
+    replyto: params.replyTo,
+    message: params.message,
+    botcheck: '',
+    ...(params.fields || {}),
+  };
+}
+

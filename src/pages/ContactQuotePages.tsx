@@ -176,17 +176,9 @@ export function ContactPage() {
                   </div>
                 )}
                 <p className="mt-2 text-sm text-[#475569] max-w-md mx-auto">
-                  Thank you, {name}.{' '}
-                  {submissionInfo?.emailStatus === 'sent'
-                    ? `All details have been sent to ${submissionInfo.recipientEmail}. We will reply to `
-                    : 'Our engineering team will review your inquiry and respond to '}
+                  Thank you, {name}. Our engineering team will review your inquiry and respond to{' '}
                   <span className="font-medium text-[#0F172A]">{email}</span>.
                 </p>
-                {submissionInfo?.emailMessage && (
-                  <p className="mt-3 mx-auto max-w-md rounded-md border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-xs text-amber-900">
-                    {submissionInfo.emailMessage}
-                  </p>
-                )}
                 <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                   <button
                     type="button"
@@ -550,17 +542,9 @@ export function QuotePage() {
                   </div>
                 )}
                 <p className="mt-2 text-sm text-[#475569] max-w-md mx-auto">
-                  Thank you, {name} ({company}).{' '}
-                  {submissionInfo?.emailStatus === 'sent'
-                    ? `All quote details have been sent to ${submissionInfo.recipientEmail}. Our sales engineering team will reply to `
-                    : 'Our sales engineering team will prepare your quotation and reply to '}
+                  Thank you, {name} ({company}). Our sales engineering team will prepare your quotation and reply to{' '}
                   <span className="font-medium text-[#0F172A]">{email}</span>.
                 </p>
-                {submissionInfo?.emailMessage && (
-                  <p className="mt-3 mx-auto max-w-md rounded-md border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-xs text-amber-900">
-                    {submissionInfo.emailMessage}
-                  </p>
-                )}
                 <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                   <button
                     type="button"

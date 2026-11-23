@@ -8,6 +8,7 @@ import {
   buildMailtoHref,
   buildQuoteEmailContent,
   buildRfqEmailContent,
+  buildWeb3FormsPayload,
 } from './emailFormatter';
 
 export type EmailDeliveryStatus = 'sent' | 'activation_required' | 'queued_locally';
@@ -20,11 +21,14 @@ export interface InquirySubmitResult {
   mailtoHref: string;
 }
 
+const CLIENT_WEB3FORMS_KEY =
+  ((import.meta as { env?: Record<string, string | undefined> }).env?.VITE_WEB3FORMS_ACCESS_KEY || '').trim();
+
 /**
- * On static hosts such as Hostinger shared hosting (with Apache .htaccess SPA fallback),
+ * On static hosts such as Hostinger or Vercel static deployments (with SPA fallback),
  * POST /api/* endpoints return either 404/405 HTML error pages or 200 text/html (index.html)
  * instead of JSON from Express. Treat any non-JSON or unreachable /api/* response as a
- * static hosting environment and relay the submission via FormSubmit.
+ * static hosting environment and relay via Web3Forms (when key set) or FormSubmit.
  */
 export function shouldFallbackToStaticRelay(contentType: string | null | undefined): boolean {
   return !(contentType || '').toLowerCase().includes('application/json');
@@ -48,10 +52,37 @@ async function postJsonOrNull(url: string, body: unknown): Promise<Response | nu
   }
 }
 
+async function relayViaWeb3Forms(params: {
+  accessKey: string;
+  subject: string;
+  fromName: string;
+  replyTo: string;
+  message: string;
+  fields?: Record<string, string>;
+}): Promise<{ status: EmailDeliveryStatus }> {
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(buildWeb3FormsPayload(params)),
+    });
+    const data = (await res.json().catch(() => ({}))) as { success?: boolean };
+    if (res.ok && data.success === true) {
+      return { status: 'sent' };
+    }
+    return { status: 'queued_locally' };
+  } catch {
+    return { status: 'queued_locally' };
+  }
+}
+
 async function relayViaFormSubmit(
   formSubmitPayload: Record<string, string>,
   recipientEmail: string
-): Promise<{ status: EmailDeliveryStatus; message?: string }> {
+): Promise<{ status: EmailDeliveryStatus }> {
   try {
     const res = await fetch(
       `https://formsubmit.co/ajax/${encodeURIComponent(recipientEmail)}`,
@@ -76,22 +107,39 @@ async function relayViaFormSubmit(
 
     const msg = String(data.message || '');
     if (msg.toLowerCase().includes('activat')) {
-      return {
-        status: 'activation_required',
-        message: `One-time inbox activation sent to ${recipientEmail}. Check your inbox and click Activate Form to receive future submissions automatically.`,
-      };
+      return { status: 'activation_required' };
     }
 
-    return {
-      status: 'queued_locally',
-      message: msg || 'Email relay could not confirm delivery. You can also send directly via your email app below.',
-    };
+    return { status: 'queued_locally' };
   } catch {
-    return {
-      status: 'queued_locally',
-      message: 'Could not reach email relay from this browser. Use the direct email backup button below.',
-    };
+    return { status: 'queued_locally' };
   }
+}
+
+async function relayOnStaticHost(params: {
+  subject: string;
+  fromName: string;
+  replyTo: string;
+  message: string;
+  fields?: Record<string, string>;
+  formSubmitPayload: Record<string, string>;
+  recipientEmail: string;
+}): Promise<{ status: EmailDeliveryStatus }> {
+  if (CLIENT_WEB3FORMS_KEY) {
+    const w3f = await relayViaWeb3Forms({
+      accessKey: CLIENT_WEB3FORMS_KEY,
+      subject: params.subject,
+      fromName: params.fromName,
+      replyTo: params.replyTo,
+      message: params.message,
+      fields: params.fields,
+    });
+    if (w3f.status === 'sent') {
+      return w3f;
+    }
+  }
+
+  return relayViaFormSubmit(params.formSubmitPayload, params.recipientEmail);
 }
 
 export async function submitQuoteInquiry(input: {
@@ -112,11 +160,23 @@ export async function submitQuoteInquiry(input: {
     const referenceId = makeClientReference('QT');
     const payload: QuoteEmailPayload = { ...input, referenceId, totalUnits, createdAt };
     const { subject, text, formSubmitPayload } = buildQuoteEmailContent(payload);
-    const relay = await relayViaFormSubmit(formSubmitPayload, OWNER_INBOX_EMAIL);
+    const relay = await relayOnStaticHost({
+      subject,
+      fromName: `${input.name} (${input.company})`,
+      replyTo: input.email,
+      message: text,
+      fields: {
+        Reference_ID: referenceId,
+        Company: input.company,
+        Phone: input.phone || 'Not provided',
+        Total_Units: `${totalUnits} pcs`,
+      },
+      formSubmitPayload,
+      recipientEmail: OWNER_INBOX_EMAIL,
+    });
     return {
       referenceId,
       emailStatus: relay.status,
-      emailMessage: relay.message,
       recipientEmail: OWNER_INBOX_EMAIL,
       mailtoHref: buildMailtoHref(OWNER_INBOX_EMAIL, subject, text),
     };
@@ -126,7 +186,6 @@ export async function submitQuoteInquiry(input: {
     error?: string;
     referenceId?: string;
     emailStatus?: EmailDeliveryStatus;
-    emailMessage?: string;
     recipientEmail?: string;
   };
 
@@ -146,7 +205,6 @@ export async function submitQuoteInquiry(input: {
   return {
     referenceId,
     emailStatus: data.emailStatus || 'queued_locally',
-    emailMessage: data.emailMessage,
     recipientEmail,
     mailtoHref: buildMailtoHref(recipientEmail, subject, text),
   };
@@ -168,11 +226,22 @@ export async function submitContactInquiry(input: {
     const referenceId = makeClientReference('INQ');
     const payload: ContactEmailPayload = { ...input, referenceId, createdAt };
     const { subject, text, formSubmitPayload } = buildContactEmailContent(payload);
-    const relay = await relayViaFormSubmit(formSubmitPayload, OWNER_INBOX_EMAIL);
+    const relay = await relayOnStaticHost({
+      subject,
+      fromName: input.name,
+      replyTo: input.email,
+      message: text,
+      fields: {
+        Reference_ID: referenceId,
+        Phone: input.phone || 'Not provided',
+        Topic: input.subject,
+      },
+      formSubmitPayload,
+      recipientEmail: OWNER_INBOX_EMAIL,
+    });
     return {
       referenceId,
       emailStatus: relay.status,
-      emailMessage: relay.message,
       recipientEmail: OWNER_INBOX_EMAIL,
       mailtoHref: buildMailtoHref(OWNER_INBOX_EMAIL, subject, text),
     };
@@ -182,7 +251,6 @@ export async function submitContactInquiry(input: {
     error?: string;
     referenceId?: string;
     emailStatus?: EmailDeliveryStatus;
-    emailMessage?: string;
     recipientEmail?: string;
   };
 
@@ -201,7 +269,6 @@ export async function submitContactInquiry(input: {
   return {
     referenceId,
     emailStatus: data.emailStatus || 'queued_locally',
-    emailMessage: data.emailMessage,
     recipientEmail,
     mailtoHref: buildMailtoHref(recipientEmail, subject, text),
   };
@@ -222,11 +289,22 @@ export async function submitQuickRfqInquiry(input: {
     const referenceId = makeClientReference('RFQ');
     const payload: RfqEmailPayload = { ...input, referenceId, totalUnits, createdAt };
     const { subject, text, formSubmitPayload } = buildRfqEmailContent(payload);
-    const relay = await relayViaFormSubmit(formSubmitPayload, OWNER_INBOX_EMAIL);
+    const relay = await relayOnStaticHost({
+      subject,
+      fromName: input.company,
+      replyTo: input.email,
+      message: text,
+      fields: {
+        Reference_ID: referenceId,
+        Company: input.company,
+        Total_Units: `${totalUnits} pcs`,
+      },
+      formSubmitPayload,
+      recipientEmail: OWNER_INBOX_EMAIL,
+    });
     return {
       referenceId,
       emailStatus: relay.status,
-      emailMessage: relay.message,
       recipientEmail: OWNER_INBOX_EMAIL,
       mailtoHref: buildMailtoHref(OWNER_INBOX_EMAIL, subject, text),
     };
@@ -236,7 +314,6 @@ export async function submitQuickRfqInquiry(input: {
     error?: string;
     referenceId?: string;
     emailStatus?: EmailDeliveryStatus;
-    emailMessage?: string;
     recipientEmail?: string;
   };
 
@@ -256,7 +333,6 @@ export async function submitQuickRfqInquiry(input: {
   return {
     referenceId,
     emailStatus: data.emailStatus || 'queued_locally',
-    emailMessage: data.emailMessage,
     recipientEmail,
     mailtoHref: buildMailtoHref(recipientEmail, subject, text),
   };

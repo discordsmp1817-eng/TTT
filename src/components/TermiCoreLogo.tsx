@@ -7,8 +7,9 @@ import { useId } from 'react';
 
 export function TermiCoreLogo({ className = 'h-8 w-8' }: { className?: string }) {
   const uid = useId().replace(/:/g, '');
-  const bgGradId = `tc-bg-${uid}`;
-  const accentGradId = `tc-accent-${uid}`;
+  const plateGradId = `tc-plate-${uid}`;
+  const rimGradId = `tc-rim-${uid}`;
+  const coreGradId = `tc-core-${uid}`;
 
   return (
     <svg
@@ -19,43 +20,55 @@ export function TermiCoreLogo({ className = 'h-8 w-8' }: { className?: string })
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id={bgGradId} x1="4" y1="2" x2="36" y2="38" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#132234" />
-          <stop offset="1" stopColor="#09111A" />
+        <linearGradient id={plateGradId} x1="4" y1="2" x2="36" y2="38" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#162436" />
+          <stop offset="0.55" stopColor="#0D1724" />
+          <stop offset="1" stopColor="#070D16" />
         </linearGradient>
-        <linearGradient id={accentGradId} x1="8" y1="8" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+        <linearGradient id={rimGradId} x1="4" y1="2" x2="36" y2="38" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#94A3B8" stopOpacity="0.45" />
+          <stop offset="0.5" stopColor="#2DD4BF" stopOpacity="0.28" />
+          <stop offset="1" stopColor="#334155" stopOpacity="0.55" />
+        </linearGradient>
+        <linearGradient id={coreGradId} x1="20" y1="17.5" x2="20" y2="34" gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor="#5EEAD4" />
-          <stop offset="1" stopColor="#0D9488" />
+          <stop offset="0.45" stopColor="#14B8A6" />
+          <stop offset="1" stopColor="#0F766E" />
         </linearGradient>
       </defs>
 
-      {/* Outer precision housing badge with subtle metallic teal hairline */}
-      <rect x="1" y="1" width="38" height="38" rx="10" fill={`url(#${bgGradId})`} />
-      <rect x="1" y="1" width="38" height="38" rx="10" stroke="#2DD4BF" strokeOpacity="0.38" strokeWidth="1.25" />
-
-      {/* Left & Right incoming copper/teal conductor leads */}
-      <path d="M5 20H11" stroke={`url(#${accentGradId})`} strokeWidth="2.8" strokeLinecap="round" />
-      <path d="M29 20H35" stroke={`url(#${accentGradId})`} strokeWidth="2.8" strokeLinecap="round" />
-
-      {/* Inner terminal clamp U-saddle cradling the T core */}
+      {/* Chamfered Octagonal Machined Housing */}
       <path
-        d="M11 16.5V23.5C11 25.433 12.567 27 14.5 27H25.5C27.433 27 29 25.433 29 23.5V16.5"
-        stroke={`url(#${accentGradId})`}
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        d="M9 2H31L38 9V31L31 38H9L2 31V9L9 2Z"
+        fill={`url(#${plateGradId})`}
+      />
+      <path
+        d="M9.35 2.75H30.65L37.25 9.35V30.65L30.65 37.25H9.35L2.75 30.65V9.35L9.35 2.75Z"
+        stroke={`url(#${rimGradId})`}
+        strokeWidth="1.2"
       />
 
-      {/* Precision Interlocking 'T' Busbar Core */}
+      {/* Top Dovetail Busbar Bridge */}
       <path
-        d="M10.5 10.5H29.5V15H22.25V24.5H17.75V15H10.5V10.5Z"
+        d="M9.5 10.5H30.5L28 15.75H12L9.5 10.5Z"
         fill="#FFFFFF"
       />
 
-      {/* Center Torque Screw & DIN Rail Foot Notch */}
-      <circle cx="20" cy="12.75" r="1.45" fill="#0F766E" />
-      <path d="M14 31.5H26" stroke="#2DD4BF" strokeWidth="2.2" strokeLinecap="round" opacity="0.85" />
+      {/* Twin Side Clamping Jaws */}
+      <path
+        d="M9.5 17.5H14V25.75L9.5 29.25V17.5Z"
+        fill="#E2E8F0"
+      />
+      <path
+        d="M30.5 17.5H26V25.75L30.5 29.25V17.5Z"
+        fill="#E2E8F0"
+      />
+
+      {/* Center Interlocking Bayonet Contact Pin */}
+      <path
+        d="M16.5 17.5H23.5V30.25L20 33.5L16.5 30.25V17.5Z"
+        fill={`url(#${coreGradId})`}
+      />
     </svg>
   );
 }
-

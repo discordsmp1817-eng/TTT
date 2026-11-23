@@ -270,10 +270,11 @@ export function Header({ isLoading = false }: { isLoading?: boolean }) {
               isLoading ? 'opacity-0' : 'opacity-100'
             }`}
           >
-            <TermiCoreLogo className="h-9 w-9 shrink-0 shadow-2xs transition-transform duration-300 group-hover:scale-105" />
+            <TermiCoreLogo className="h-9 w-9 shrink-0 transition-transform duration-300 group-hover:scale-105" />
           </div>
-          <span className="font-display text-base sm:text-lg font-extrabold tracking-tight text-[#101D2B]">
-            TermiCore
+          <span className="font-display text-[17px] sm:text-[18px] tracking-[0.04em] uppercase leading-none">
+            <span className="font-extrabold text-[#0F172A]">TERMI</span>
+            <span className="font-semibold text-[#0F766E]">CORE</span>
           </span>
         </button>
 

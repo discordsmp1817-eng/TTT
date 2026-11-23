@@ -38,11 +38,13 @@ export function Footer() {
             <button
               type="button"
               onClick={() => handleLink('/')}
+              aria-label="TermiCore Home"
               className="flex items-center gap-3 text-left cursor-pointer rounded"
             >
-              <TermiCoreLogo className="h-9 w-9 shrink-0 shadow-xs" />
-              <span className="font-display text-lg font-extrabold tracking-tight text-white">
-                TermiCore
+              <TermiCoreLogo className="h-9 w-9 shrink-0" />
+              <span className="font-display text-[18px] tracking-[0.04em] uppercase leading-none">
+                <span className="font-extrabold text-white">TERMI</span>
+                <span className="font-semibold text-[#2DD4BF]">CORE</span>
               </span>
             </button>
 

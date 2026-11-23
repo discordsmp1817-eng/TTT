@@ -6,6 +6,7 @@ import {
   buildMailtoHref,
   buildQuoteEmailContent,
   buildRfqEmailContent,
+  buildWeb3FormsPayload,
   escapeHtml,
 } from './emailFormatter';
 
@@ -38,7 +39,7 @@ test('buildQuoteEmailContent formats subject, line items, and FormSubmit fields'
     createdAt: '2026-11-14T08:30:00.000Z',
   });
 
-  assert.equal(OWNER_INBOX_EMAIL, 'gaurangambulkar@gmail.com');
+  assert.equal(OWNER_INBOX_EMAIL, 'gaurangambulkar2@gmail.com');
   assert.match(result.subject, /QT-2026-AB12CD/);
   assert.match(result.subject, /Apex Switchgear/);
   assert.match(result.text, /TSC 4 — TSC 4 Feed-Through Block/);
@@ -88,6 +89,23 @@ test('buildRfqEmailContent includes item summary and quantity', () => {
 });
 
 test('buildMailtoHref creates encoded mailto link', () => {
-  const href = buildMailtoHref('gaurangambulkar@gmail.com', 'Quote QT-1', 'Line 1\nLine 2');
-  assert.ok(href.startsWith('mailto:gaurangambulkar%40gmail.com?subject=Quote%20QT-1&body='));
+  const href = buildMailtoHref('gaurangambulkar2@gmail.com', 'Quote QT-1', 'Line 1\nLine 2');
+  assert.ok(href.startsWith('mailto:gaurangambulkar2%40gmail.com?subject=Quote%20QT-1&body='));
 });
+
+test('buildWeb3FormsPayload constructs clean relay JSON fields', () => {
+  const payload = buildWeb3FormsPayload({
+    accessKey: 'w3f-test-key',
+    subject: '[TermiCore Contact INQ-1] Sample',
+    fromName: 'Aarav Patel',
+    replyTo: 'aarav@example.com',
+    message: 'Need TSC 4 samples',
+    fields: { Reference_ID: 'INQ-1' },
+  });
+  assert.equal(payload.access_key, 'w3f-test-key');
+  assert.equal(payload.from_name, 'Aarav Patel');
+  assert.equal(payload.replyto, 'aarav@example.com');
+  assert.equal(payload.Reference_ID, 'INQ-1');
+  assert.equal(payload.botcheck, '');
+});
+
