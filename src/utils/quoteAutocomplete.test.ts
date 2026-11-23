@@ -4,6 +4,7 @@ import {
   CATALOG_SEARCH_INDEX,
   QUANTITY_PRESETS,
   composeQuoteSubmissionNotes,
+  getSeriesSummaryMeta,
   isPresetQuantity,
   searchCatalogProducts,
   searchCountries,
@@ -91,3 +92,25 @@ test('composeQuoteSubmissionNotes includes description, country, and selected qu
   assert.match(result, /Country \/ Delivery Region: Germany/);
   assert.match(result, /Selected Order Quantity: 1,000 pcs/);
 });
+
+test('searchCatalogProducts returns all products for a selected series without truncation', () => {
+  const tscAll = searchCatalogProducts('', Infinity, 'TSC');
+  assert.equal(tscAll.length, 14);
+  assert.ok(tscAll.every((item) => item.seriesGroup === 'TSC'));
+
+  const tbcAll = searchCatalogProducts('', Infinity, 'TBC / TBH');
+  assert.equal(tbcAll.length, 7);
+  assert.ok(tbcAll.every((item) => item.seriesGroup === 'TBC / TBH'));
+
+  const filteredWithinSeries = searchCatalogProducts('PE', Infinity, 'TSC');
+  assert.ok(filteredWithinSeries.length > 0);
+  assert.ok(filteredWithinSeries.every((item) => item.seriesGroup === 'TSC'));
+
+  const catalogAll = searchCatalogProducts('', Infinity, 'ALL');
+  assert.equal(catalogAll.length, CATALOG_SEARCH_INDEX.length);
+
+  const meta = getSeriesSummaryMeta('TSC');
+  assert.equal(meta.productCount, 14);
+  assert.equal(meta.code, 'TSC');
+});
+

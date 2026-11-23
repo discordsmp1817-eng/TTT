@@ -18,6 +18,7 @@ import {
 import {
   CatalogSearchItem,
   composeQuoteSubmissionNotes,
+  getSeriesSummaryMeta,
   isPresetQuantity,
 } from '../utils/quoteAutocomplete';
 import {
@@ -328,6 +329,11 @@ export function QuotePage() {
   const [submitted, setSubmitted] = useState(false);
   const [submissionInfo, setSubmissionInfo] = useState<InquirySubmitResult | null>(null);
 
+  const activeSeriesMeta = useMemo(
+    () => getSeriesSummaryMeta(seriesSelect),
+    [seriesSelect]
+  );
+
   const noteSuggestions = useMemo(
     () =>
       getQuoteNoteSuggestions(
@@ -472,51 +478,6 @@ export function QuotePage() {
                 ))}
               </div>
             </GlowCard>
-
-            {/* Quick Series Adder */}
-            <div className="rounded-lg border border-slate-200 bg-white p-6">
-              <h3 className="font-display text-sm font-bold text-[#0F172A]">
-                Add Series to Quotation List
-              </h3>
-              <div className="mt-3 flex gap-2">
-                <select
-                  aria-label="Select terminal block series"
-                  value={seriesSelect}
-                  onChange={(e) => setSeriesSelect(e.target.value)}
-                  className="min-w-0 flex-1 rounded-md border border-slate-300 bg-[#F7F9FB] px-3 py-2 text-xs text-[#0F172A] focus:border-[#0F766E] focus:outline-none"
-                >
-                  {PRODUCT_CATEGORIES.map((c) => (
-                    <option key={c.id} value={c.seriesCode}>
-                      {c.seriesCode} — {c.title}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const found = PRODUCT_CATEGORIES.find(
-                      (c) => c.seriesCode === seriesSelect
-                    );
-                    if (found) {
-                      addToRfq(
-                        {
-                          id: found.seriesCode,
-                          model: found.seriesCode,
-                          title: found.title,
-                          category: 'Series Inquiry',
-                          specSummary: `${found.wireRangeSummary} · ${found.currentMaxSummary}`,
-                          quantity: estimatedQuantity > 0 ? estimatedQuantity : 100,
-                        },
-                        { openDrawer: false }
-                      );
-                    }
-                  }}
-                  className="rounded-md bg-[#0F766E] px-3.5 py-2 text-xs font-semibold text-white hover:bg-[#0D9488] transition-colors cursor-pointer whitespace-nowrap"
-                >
-                  Add
-                </button>
-              </div>
-            </div>
           </RevealBlock>
 
           <RevealBlock
@@ -582,9 +543,76 @@ export function QuotePage() {
                   </span>
                 </div>
 
+                {/* Series Filter & Quick Series Adder directly above product selector */}
+                <div className="rounded-lg border border-[#DCE2E8] bg-[#F7F9FB] p-4 space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="font-display text-xs font-bold uppercase tracking-wider text-[#101D2B]">
+                      Add Series to Quotation List
+                    </h3>
+                    <span className="font-mono text-[11px] font-semibold text-[#0F766E]">
+                      {activeSeriesMeta.productCount} products available
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <select
+                      aria-label="Select terminal block series"
+                      value={seriesSelect}
+                      onChange={(e) => setSeriesSelect(e.target.value)}
+                      className="min-w-0 flex-1 rounded-md border border-slate-300 bg-white px-3 py-2.5 text-xs font-medium text-[#0F172A] focus:border-[#0F766E] focus:ring-2 focus:ring-[#0F766E]/15 focus:outline-none"
+                    >
+                      {PRODUCT_CATEGORIES.map((c) => (
+                        <option key={c.id} value={c.seriesCode}>
+                          {c.seriesCode} — {c.title} ({c.skus.length} products)
+                        </option>
+                      ))}
+                      <option value="ACCESSORIES">
+                        Accessories — DIN Rail &amp; Panel Hardware (7 products)
+                      </option>
+                      <option value="ALL">
+                        All Series — Entire TermiCore Catalog (80 products)
+                      </option>
+                    </select>
+                    {seriesSelect !== 'ALL' && seriesSelect !== 'ACCESSORIES' && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const found = PRODUCT_CATEGORIES.find(
+                            (c) => c.seriesCode === seriesSelect
+                          );
+                          if (found) {
+                            addToRfq(
+                              {
+                                id: found.seriesCode,
+                                model: found.seriesCode,
+                                title: found.title,
+                                category: 'Series Inquiry',
+                                specSummary: `${found.wireRangeSummary} · ${found.currentMaxSummary}`,
+                                quantity: estimatedQuantity > 0 ? estimatedQuantity : 100,
+                              },
+                              { openDrawer: false }
+                            );
+                          }
+                        }}
+                        className="rounded-md bg-[#0F766E] px-4 py-2.5 text-xs font-semibold text-white hover:bg-[#0D9488] transition-colors cursor-pointer whitespace-nowrap"
+                      >
+                        Add Series
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-200/80 pt-2.5 text-[11px] text-[#475569]">
+                    <span className="truncate">{activeSeriesMeta.summaryText}</span>
+                    <span className="font-mono font-medium text-[#101D2B] shrink-0">
+                      {activeSeriesMeta.wireRangeSummary} · {activeSeriesMeta.currentMaxSummary}
+                    </span>
+                  </div>
+                </div>
+
                 <ProductAutocomplete
                   selectedItems={rfqItems}
                   defaultQuantity={estimatedQuantity > 0 ? estimatedQuantity : 100}
+                  selectedSeries={seriesSelect}
                   onSelectProduct={handleSelectCatalogProduct}
                 />
 

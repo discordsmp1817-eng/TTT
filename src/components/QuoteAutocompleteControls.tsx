@@ -6,6 +6,7 @@ import {
   CatalogSearchItem,
   CountryEntry,
   QUANTITY_PRESETS,
+  getSeriesSummaryMeta,
   isPresetQuantity,
   searchCatalogProducts,
   searchCountries,
@@ -45,12 +46,14 @@ function HighlightedText({
 interface ProductAutocompleteProps {
   selectedItems: RfqItem[];
   defaultQuantity: number;
+  selectedSeries?: string;
   onSelectProduct: (item: CatalogSearchItem) => void;
 }
 
 export function ProductAutocomplete({
   selectedItems,
   defaultQuantity,
+  selectedSeries,
   onSelectProduct,
 }: ProductAutocompleteProps) {
   const [query, setQuery] = useState('');
@@ -63,7 +66,15 @@ export function ProductAutocomplete({
   const listboxId = useId();
   const shouldReduce = useReducedMotion();
 
-  const matches = useMemo(() => searchCatalogProducts(query, 12), [query]);
+  const activeSeriesMeta = useMemo(
+    () => (selectedSeries ? getSeriesSummaryMeta(selectedSeries) : null),
+    [selectedSeries]
+  );
+
+  const matches = useMemo(
+    () => searchCatalogProducts(query, Infinity, selectedSeries),
+    [query, selectedSeries]
+  );
 
   const selectedQuantityMap = useMemo(() => {
     const map = new Map<string, number>();
@@ -72,6 +83,12 @@ export function ProductAutocomplete({
     }
     return map;
   }, [selectedItems]);
+
+  useEffect(() => {
+    setQuery('');
+    setActiveIndex(0);
+    setLastAddedModel(null);
+  }, [selectedSeries]);
 
   useEffect(() => {
     setActiveIndex(0);
@@ -135,15 +152,48 @@ export function ProductAutocomplete({
     }
   };
 
+  const dynamicPlaceholder = activeSeriesMeta
+    ? `Search ${activeSeriesMeta.productCount} ${
+        activeSeriesMeta.code === 'ALL'
+          ? 'catalog'
+          : activeSeriesMeta.code === 'ACCESSORIES'
+          ? 'accessory'
+          : activeSeriesMeta.code
+      } products (e.g. ${activeSeriesMeta.sampleModels.join(', ')})...`
+    : 'Type SKU, product name, or category (e.g. TSC 2.5, TBC 70, Spring Cage)...';
+
   return (
     <div ref={containerRef} className={`relative ${isOpen ? 'z-40' : 'z-10'}`}>
-      <div className="flex items-center justify-between gap-2 mb-1.5">
-        <label
-          htmlFor="quote-product-search"
-          className="block text-xs font-semibold text-[#475569]"
-        >
-          Search &amp; Add Products (Model, Name, or Category)
-        </label>
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+        <div className="flex flex-wrap items-center gap-2">
+          <label
+            htmlFor="quote-product-search"
+            className="block text-xs font-semibold text-[#475569]"
+          >
+            Search &amp; Add Products
+          </label>
+          {activeSeriesMeta && (
+            <button
+              type="button"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => {
+                setIsOpen((prev) => !prev);
+                inputRef.current?.focus();
+              }}
+              className="inline-flex items-center gap-1 rounded border border-[#0F766E]/25 bg-[#0F766E]/[0.07] px-2 py-0.5 font-mono text-[11px] font-semibold text-[#0F766E] hover:bg-[#0F766E]/15 transition-colors cursor-pointer"
+            >
+              <span>
+                {activeSeriesMeta.code === 'ALL'
+                  ? 'All Series'
+                  : activeSeriesMeta.code === 'ACCESSORIES'
+                  ? 'Accessories'
+                  : activeSeriesMeta.code}
+              </span>
+              <span className="text-[#0F766E]/60">·</span>
+              <span>All {activeSeriesMeta.productCount} models</span>
+            </button>
+          )}
+        </div>
         {lastAddedModel && (
           <span className="text-[11px] font-medium text-[#0F766E]">
             Added {lastAddedModel} ({defaultQuantity.toLocaleString()} pcs)
@@ -178,7 +228,7 @@ export function ProductAutocomplete({
             setLastAddedModel(null);
           }}
           onKeyDown={handleKeyDown}
-          placeholder="Type SKU, product name, or category (e.g. TSC 2.5, TBC 70, Spring Cage)..."
+          placeholder={dynamicPlaceholder}
           className={`${INPUT_CLASS} pl-9 pr-9`}
         />
         {query ? (
@@ -222,15 +272,17 @@ export function ProductAutocomplete({
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduce ? { opacity: 0 } : { opacity: 0, y: -4 }}
             transition={{ duration: 0.16, ease: INDUSTRIAL_EASE }}
-            className="absolute z-30 mt-1.5 w-full rounded-md border border-slate-200 bg-white shadow-lg overflow-hidden"
+            className="absolute z-30 mt-1.5 w-full rounded-md border border-[#0F766E]/25 bg-white shadow-xl overflow-hidden"
           >
-            <div className="flex items-center justify-between border-b border-slate-100 bg-[#F7F9FB] px-3 py-1.5 text-[11px] text-[#64748B]">
-              <span>
+            <div className="flex items-center justify-between border-b border-slate-100 bg-[#F7F9FB] px-3 py-2 text-[11px] text-[#475569]">
+              <span className="font-medium">
                 {query.trim()
-                  ? `${matches.length} matching TermiCore ${matches.length === 1 ? 'product' : 'products'}`
-                  : 'TermiCore Catalog — Select multiple items to add'}
+                  ? `${matches.length} of ${activeSeriesMeta?.productCount ?? matches.length} matching in ${activeSeriesMeta?.title ?? 'Catalog'}`
+                  : activeSeriesMeta
+                  ? `${activeSeriesMeta.title} (${activeSeriesMeta.code}) — All ${matches.length} products`
+                  : `TermiCore Catalog — ${matches.length} products`}
               </span>
-              <span className="hidden sm:inline font-mono">↑↓ Navigate · Enter Add</span>
+              <span className="hidden sm:inline font-mono text-[#64748B]">↑↓ Navigate · Enter Add</span>
             </div>
 
             {matches.length > 0 ? (
@@ -240,7 +292,7 @@ export function ProductAutocomplete({
                 role="listbox"
                 aria-label="TermiCore matching products"
                 data-lenis-prevent
-                className="max-h-64 overflow-y-auto divide-y divide-slate-100"
+                className="max-h-[420px] overflow-y-auto divide-y divide-slate-100"
               >
                 {matches.map((item, idx) => {
                   const isActive = idx === activeIndex;
@@ -255,9 +307,9 @@ export function ProductAutocomplete({
                       onMouseEnter={() => setActiveIndex(idx)}
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => handleChoose(item)}
-                      className={`flex items-center justify-between gap-3 px-3.5 py-2.5 text-left transition-colors cursor-pointer ${
+                      className={`flex items-center justify-between gap-3 px-3.5 py-2 text-left transition-colors cursor-pointer ${
                         isActive
-                          ? 'bg-[#0F766E]/[0.07]'
+                          ? 'bg-[#0F766E]/[0.08]'
                           : 'bg-white hover:bg-[#F7F9FB]'
                       }`}
                     >
@@ -304,7 +356,7 @@ export function ProductAutocomplete({
               </ul>
             ) : (
               <div className="px-4 py-4 text-xs text-[#64748B]">
-                No matching products in the TermiCore catalogue for &ldquo;{query.trim()}&rdquo;. Try searching by series (`TSC`, `TSC-R`, `TSS`, `TBC`, `TNC`), wire range, or accessory (`EP Series`, `Jumper`).
+                No matching products in {activeSeriesMeta?.title ?? 'the TermiCore catalogue'} for &ldquo;{query.trim()}&rdquo;. Clear the search text or select another series above.
               </div>
             )}
           </motion.div>

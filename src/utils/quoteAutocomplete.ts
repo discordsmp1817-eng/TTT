@@ -6,6 +6,7 @@ export interface CatalogSearchItem {
   name: string;
   category: string;
   seriesCode: string;
+  seriesGroup: string;
   specSummary: string;
   searchBlob: string;
 }
@@ -37,6 +38,7 @@ export function buildCatalogIndex(): CatalogSearchItem[] {
         name: sku.name,
         category: `${cat.title} (${cat.seriesCode})`,
         seriesCode: cat.seriesCode,
+        seriesGroup: cat.seriesCode,
         specSummary,
         searchBlob: [
           sku.model,
@@ -62,6 +64,7 @@ export function buildCatalogIndex(): CatalogSearchItem[] {
       name: acc.title,
       category: `DIN Rail Accessories · ${acc.category}`,
       seriesCode: acc.series,
+      seriesGroup: 'ACCESSORIES',
       specSummary,
       searchBlob: [
         acc.series,
@@ -81,13 +84,74 @@ export function buildCatalogIndex(): CatalogSearchItem[] {
 
 export const CATALOG_SEARCH_INDEX: CatalogSearchItem[] = buildCatalogIndex();
 
+export interface SeriesSummaryMeta {
+  code: string;
+  title: string;
+  summaryText: string;
+  wireRangeSummary: string;
+  currentMaxSummary: string;
+  productCount: number;
+  sampleModels: string[];
+}
+
+export function getSeriesSummaryMeta(seriesFilter: string): SeriesSummaryMeta {
+  if (seriesFilter === 'ALL') {
+    return {
+      code: 'ALL',
+      title: 'All Product Series & Accessories',
+      summaryText: 'Complete DIN rail, PCB, barrier terminal block & accessory catalog',
+      wireRangeSummary: '0.14 – 240 mm²',
+      currentMaxSummary: 'Up to 415 A',
+      productCount: CATALOG_SEARCH_INDEX.length,
+      sampleModels: ['TSC 2.5', 'TSC-R 4', 'TBC 50', 'TPC 5.08-SC'],
+    };
+  }
+
+  if (seriesFilter === 'ACCESSORIES') {
+    const items = CATALOG_SEARCH_INDEX.filter((item) => item.seriesGroup === 'ACCESSORIES');
+    return {
+      code: 'ACCESSORIES',
+      title: 'DIN Rail & Panel Accessories',
+      summaryText: 'End plates, cross jumpers, DIN rails, end stops & marking tags',
+      wireRangeSummary: 'Universal fit',
+      currentMaxSummary: 'UL 94 V-0 / Cu',
+      productCount: items.length,
+      sampleModels: items.slice(0, 3).map((i) => i.model),
+    };
+  }
+
+  const matchedCategory =
+    PRODUCT_CATEGORIES.find((cat) => cat.seriesCode === seriesFilter) || PRODUCT_CATEGORIES[0];
+  const items = CATALOG_SEARCH_INDEX.filter(
+    (item) => item.seriesGroup === matchedCategory.seriesCode
+  );
+  return {
+    code: matchedCategory.seriesCode,
+    title: matchedCategory.title,
+    summaryText: matchedCategory.tagline,
+    wireRangeSummary: matchedCategory.wireRangeSummary,
+    currentMaxSummary: matchedCategory.currentMaxSummary,
+    productCount: items.length,
+    sampleModels: items.slice(0, 3).map((i) => i.model),
+  };
+}
+
 export function searchCatalogProducts(
   query: string,
-  limit = 10
+  limit = 10,
+  seriesFilter?: string
 ): CatalogSearchItem[] {
+  const basePool =
+    !seriesFilter || seriesFilter === 'ALL'
+      ? CATALOG_SEARCH_INDEX
+      : CATALOG_SEARCH_INDEX.filter((item) => item.seriesGroup === seriesFilter);
+
   const trimmed = query.trim().toLowerCase();
   if (!trimmed) {
-    // Curated representative sample of real catalogue items across series & accessories
+    // When a specific series or 'ALL' browser mode is active, return all matching series items
+    if (seriesFilter) {
+      return Number.isFinite(limit) ? basePool.slice(0, limit) : basePool;
+    }
     const featuredIds = [
       'TSC 2.5',
       'TSC 4',
@@ -99,14 +163,14 @@ export function searchCatalogProducts(
       'acc-ep-series',
     ];
     const featured = featuredIds
-      .map((id) => CATALOG_SEARCH_INDEX.find((item) => item.id === id))
+      .map((id) => basePool.find((item) => item.id === id))
       .filter((item): item is CatalogSearchItem => Boolean(item));
-    return featured.slice(0, limit);
+    return Number.isFinite(limit) ? featured.slice(0, limit) : featured;
   }
 
   const tokens = trimmed.split(/\s+/).filter(Boolean);
 
-  const scored = CATALOG_SEARCH_INDEX.map((item) => {
+  const scored = basePool.map((item) => {
     const modelLower = item.model.toLowerCase();
     const nameLower = item.name.toLowerCase();
     const categoryLower = item.category.toLowerCase();
@@ -142,7 +206,8 @@ export function searchCatalogProducts(
         a.item.model.localeCompare(b.item.model, undefined, { numeric: true })
     );
 
-  return scored.slice(0, limit).map((entry) => entry.item);
+  const result = scored.map((entry) => entry.item);
+  return Number.isFinite(limit) ? result.slice(0, limit) : result;
 }
 
 export function splitHighlightParts(
