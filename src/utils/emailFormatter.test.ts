@@ -103,9 +103,11 @@ test('buildWeb3FormsPayload constructs clean relay JSON fields', () => {
     fields: { Reference_ID: 'INQ-1' },
   });
   assert.equal(payload.access_key, 'w3f-test-key');
-  assert.equal(payload.from_name, 'Aarav Patel');
+  assert.equal(payload.name, 'Aarav Patel');
+  assert.equal(payload.from_name, 'TermiCore Website');
+  assert.equal(payload.email, 'aarav@example.com');
   assert.equal(payload.replyto, 'aarav@example.com');
   assert.equal(payload.Reference_ID, 'INQ-1');
-  assert.equal(payload.botcheck, '');
+  assert.equal('botcheck' in payload, false);
 });
 

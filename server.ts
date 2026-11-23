@@ -16,7 +16,6 @@ import {
   buildContactEmailContent,
   buildQuoteEmailContent,
   buildRfqEmailContent,
-  buildWeb3FormsPayload,
 } from './src/utils/emailFormatter.ts';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -136,7 +135,7 @@ function sanitizeItems(rawItems: unknown): RfqLineItem[] {
 
 interface EmailDeliveryOutcome {
   emailDelivered: boolean;
-  emailProvider: 'smtp' | 'resend' | 'web3forms' | 'formsubmit' | 'none';
+  emailProvider: 'smtp' | 'resend' | 'formsubmit' | 'none';
   emailStatus: 'sent' | 'activation_required' | 'queued_locally';
   recipientEmail: string;
 }
@@ -145,7 +144,6 @@ async function deliverInquiryEmail(params: {
   subject: string;
   text: string;
   html: string;
-  fromName: string;
   replyTo: string;
   formSubmitPayload: Record<string, string>;
   originHeader?: string;
@@ -221,45 +219,7 @@ async function deliverInquiryEmail(params: {
     }
   }
 
-  // Free Web3Forms relay (clean Primary Inbox delivery, zero client activation banners)
-  const web3FormsKey = (
-    process.env.WEB3FORMS_ACCESS_KEY ||
-    process.env.VITE_WEB3FORMS_ACCESS_KEY ||
-    ''
-  ).trim();
-  if (web3FormsKey) {
-    try {
-      const w3fRes = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify(
-          buildWeb3FormsPayload({
-            accessKey: web3FormsKey,
-            subject: params.subject,
-            fromName: params.fromName,
-            replyTo: params.replyTo,
-            message: params.text,
-          })
-        ),
-      });
-      const w3fData = (await w3fRes.json().catch(() => ({}))) as { success?: boolean };
-      if (w3fRes.ok && w3fData.success === true) {
-        return {
-          emailDelivered: true,
-          emailProvider: 'web3forms',
-          emailStatus: 'sent',
-          recipientEmail: RECIPIENT_EMAIL,
-        };
-      }
-    } catch (err) {
-      console.error('Web3Forms relay error:', err);
-    }
-  }
-
-  // Silent FormSubmit relay fallback when SMTP/Resend/Web3Forms keys are unset
+  // Silent FormSubmit relay fallback when SMTP/Resend env vars are unset
   if (process.env.ENABLE_FORMSUBMIT_RELAY !== 'false') {
     try {
       const referer =
@@ -452,7 +412,6 @@ async function startServer() {
       subject: formatted.subject,
       text: formatted.text,
       html: formatted.html,
-      fromName: company,
       replyTo: email,
       formSubmitPayload: formatted.formSubmitPayload,
       originHeader: req.get('origin') || req.get('referer'),
@@ -512,7 +471,6 @@ async function startServer() {
       subject: formatted.subject,
       text: formatted.text,
       html: formatted.html,
-      fromName: `${name} (${company})`,
       replyTo: email,
       formSubmitPayload: formatted.formSubmitPayload,
       originHeader: req.get('origin') || req.get('referer'),
@@ -572,7 +530,6 @@ async function startServer() {
       subject: formatted.subject,
       text: formatted.text,
       html: formatted.html,
-      fromName: name,
       replyTo: email,
       formSubmitPayload: formatted.formSubmitPayload,
       originHeader: req.get('origin') || req.get('referer'),

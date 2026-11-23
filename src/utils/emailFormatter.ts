@@ -289,10 +289,11 @@ export function buildWeb3FormsPayload(params: {
   return {
     access_key: params.accessKey,
     subject: params.subject,
-    from_name: params.fromName,
+    name: params.fromName,
+    from_name: 'TermiCore Website',
+    email: params.replyTo,
     replyto: params.replyTo,
     message: params.message,
-    botcheck: '',
     ...(params.fields || {}),
   };
 }
