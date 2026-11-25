@@ -59,7 +59,7 @@ const PCB_SELECTION_PARAMETERS = [
 export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
   const { navigate, addToRfq, navFilter } = useApp();
   const [typeFilter, setTypeFilter] = useState<string>('All');
-  const [wireRangeFilter, setWireRangeFilter] = useState<string>('All');
+  const [currentRatingFilter, setCurrentRatingFilter] = useState<string>('All');
   const [voltageFilter, setVoltageFilter] = useState<string>('All');
   const [pitchFilter, setPitchFilter] = useState<PitchBand>('All');
   const [processFilter, setProcessFilter] = useState<ProcessFilter>('All');
@@ -81,13 +81,13 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
           ? navFilter.typeFilter
           : 'All';
       setTypeFilter(nextType);
-      setWireRangeFilter('All');
+      setCurrentRatingFilter('All');
       setVoltageFilter('All');
       setPitchFilter(navFilter.pitchFilter ?? 'All');
       setProcessFilter(navFilter.processFilter ?? 'All');
     } else {
       setTypeFilter('All');
-      setWireRangeFilter('All');
+      setCurrentRatingFilter('All');
       setVoltageFilter('All');
       setPitchFilter('All');
       setProcessFilter('All');
@@ -97,7 +97,7 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
   const filteredSkus = useMemo(() => {
     return filterCategorySkus(category.skus, {
       typeFilter,
-      wireRangeFilter,
+      currentRatingFilter,
       voltageFilter,
       pitchFilter,
       processFilter,
@@ -106,7 +106,7 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
   }, [
     category.skus,
     typeFilter,
-    wireRangeFilter,
+    currentRatingFilter,
     voltageFilter,
     pitchFilter,
     processFilter,
@@ -115,14 +115,14 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
 
   const hasActiveFilters =
     typeFilter !== 'All' ||
-    wireRangeFilter !== 'All' ||
+    currentRatingFilter !== 'All' ||
     voltageFilter !== 'All' ||
     pitchFilter !== 'All' ||
     processFilter !== 'All';
 
   const resetAllFilters = () => {
     setTypeFilter('All');
-    setWireRangeFilter('All');
+    setCurrentRatingFilter('All');
     setVoltageFilter('All');
     setPitchFilter('All');
     setProcessFilter('All');
@@ -325,15 +325,15 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
 
                 <div className="relative">
                   <select
-                    aria-label="Filter by conductor cross section"
-                    value={wireRangeFilter}
-                    onChange={(e) => setWireRangeFilter(e.target.value)}
+                    aria-label="Filter by current rating"
+                    value={currentRatingFilter}
+                    onChange={(e) => setCurrentRatingFilter(e.target.value)}
                     className="w-full h-10 appearance-none rounded-md border border-[#DCE2E8] bg-white pl-3.5 pr-9 text-xs sm:text-[13px] font-medium text-[#334155] shadow-[0_1px_2px_rgba(16,29,43,0.03)] transition-colors hover:border-[#94A3B8] focus:border-[#0F766E] focus:outline-none focus:ring-2 focus:ring-[#0F766E]/15 cursor-pointer"
                   >
-                    <option value="All">- Conductor cross section -</option>
-                    {filterOptions.wireRanges.map((range) => (
-                      <option key={range} value={range}>
-                        {range}
+                    <option value="All">- Current Rating -</option>
+                    {filterOptions.currentRatings.map((rating) => (
+                      <option key={rating} value={rating}>
+                        {rating}
                       </option>
                     ))}
                   </select>
@@ -418,7 +418,7 @@ export function CategoryDetailPage({ category }: CategoryDetailPageProps) {
           ) : (
             <div className="rounded-lg border border-slate-200 bg-[#F7F9FB] p-8 text-center">
               <p className="text-sm text-[#475569]">
-                No models match the active category, cross section, and voltage filter combination.
+                No models match the active category, current rating, and voltage filter combination.
               </p>
               <button
                 type="button"

@@ -19,13 +19,13 @@ export function AboutPage() {
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center">
           <RevealBlock direction="left" distance={58} className="lg:col-span-6" blur>
             <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
-              About TermiCore · State-of-the-Art Production
+              About Termiflux · State-of-the-Art Production
             </p>
             <h1 className="mt-2 font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#101D2B] text-balance">
               Precision Engineered in Our Advanced Manufacturing Facility
             </h1>
             <p className="mt-4 text-base leading-relaxed text-[#475569]">
-              TermiCore operates a fully integrated precision manufacturing plant equipped with automated stamping presses, high-speed polyamide injection molding, and optical metrology laboratories to ensure absolute electrical reliability.
+              Termiflux operates a fully integrated precision manufacturing plant equipped with automated stamping presses, high-speed polyamide injection molding, and optical metrology laboratories to ensure absolute electrical reliability.
             </p>
             <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold text-[#101D2B]">
               <span>ISO 9001:2015 Certified</span>
@@ -44,8 +44,8 @@ export function AboutPage() {
           >
             <EngineeringImage
               src={IMAGES.controlCabinet}
-              alt="TermiCore automated manufacturing facility and control assembly plant"
-              fallbackTitle="TermiCore Production Facility Floor"
+              alt="Termiflux automated manufacturing facility and control assembly plant"
+              fallbackTitle="Termiflux Production Facility Floor"
               className="h-full w-full object-cover"
             />
           </ImageReveal>
@@ -144,7 +144,7 @@ export function AboutPage() {
               Engineering Excellence in Every Connection
             </p>
             <h2 className="mt-2 font-display text-2xl sm:text-3xl font-extrabold text-[#101D2B]">
-              Why Professionals Trust TermiCore
+              Why Professionals Trust Termiflux
             </h2>
           </RevealBlock>
 
@@ -240,7 +240,7 @@ export function AboutPage() {
                 onClick={() => navigate('/contact')}
                 className="group inline-flex items-center gap-2 rounded-lg bg-[#0F766E] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0D9488] transition-colors whitespace-nowrap shrink-0 cursor-pointer min-h-[44px]"
               >
-                <span>Contact TermiCore</span>
+                <span>Contact Termiflux</span>
                 <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
               </MagneticButton>
             </div>

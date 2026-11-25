@@ -126,7 +126,7 @@ export function ProductsPage() {
                   Need a Custom Solution or Complete Accessory Kit?
                 </h2>
                 <p className="mt-1.5 text-sm text-[#CBD5E1]">
-                  Pair your terminal blocks with TermiCore end plates, partition plates, insulated cross jumpers, and TS 35 DIN rails.
+                  Pair your terminal blocks with Termiflux end plates, partition plates, insulated cross jumpers, and TS 35 DIN rails.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3 shrink-0">

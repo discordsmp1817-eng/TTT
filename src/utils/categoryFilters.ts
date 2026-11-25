@@ -5,7 +5,7 @@ export type ProcessFilter = 'All' | 'tht' | 'thr' | 'plug';
 
 export interface CategoryFilterCriteria {
   typeFilter: string;
-  wireRangeFilter: string;
+  currentRatingFilter: string;
   voltageFilter: string;
   pitchFilter?: PitchBand;
   processFilter?: ProcessFilter;
@@ -14,7 +14,7 @@ export interface CategoryFilterCriteria {
 
 export interface CategoryFilterOptions {
   connectionTypes: string[];
-  wireRanges: string[];
+  currentRatings: string[];
   voltages: string[];
 }
 
@@ -35,12 +35,11 @@ export function matchesProcess(mounting: string, process: ProcessFilter): boolea
   return true;
 }
 
-function parseWireSortKey(wireRange: string): [number, number, number] {
-  const isPinHeader = wireRange.toLowerCase().includes('header pin');
-  const numbers = wireRange.match(/\d+(?:\.\d+)?/g)?.map(Number) ?? [];
-  const first = numbers[0] ?? Number.MAX_SAFE_INTEGER;
-  const second = numbers[1] ?? first;
-  return [isPinHeader ? 1 : 0, first, second];
+function parseCurrentRatingSortKey(currentRating: string): [number, number] {
+  const match = currentRating.match(/\d+(?:\.\d+)?/);
+  if (!match) return [1, Number.MAX_SAFE_INTEGER];
+  const value = Number(match[0]);
+  return Number.isNaN(value) ? [1, Number.MAX_SAFE_INTEGER] : [0, value];
 }
 
 function parseVoltageSortKey(voltage: string): number {
@@ -51,12 +50,11 @@ function parseVoltageSortKey(voltage: string): number {
 export function getCategoryFilterOptions(skus: ProductSku[]): CategoryFilterOptions {
   const connectionTypes = Array.from(new Set(skus.map((s) => s.connectionType)));
 
-  const wireRanges = Array.from(new Set(skus.map((s) => s.wireRangeIec))).sort((a, b) => {
-    const [groupA, minA, maxA] = parseWireSortKey(a);
-    const [groupB, minB, maxB] = parseWireSortKey(b);
+  const currentRatings = Array.from(new Set(skus.map((s) => s.currentRating))).sort((a, b) => {
+    const [groupA, valA] = parseCurrentRatingSortKey(a);
+    const [groupB, valB] = parseCurrentRatingSortKey(b);
     if (groupA !== groupB) return groupA - groupB;
-    if (minA !== minB) return minA - minB;
-    if (maxA !== maxB) return maxA - maxB;
+    if (valA !== valB) return valA - valB;
     return a.localeCompare(b);
   });
 
@@ -67,7 +65,7 @@ export function getCategoryFilterOptions(skus: ProductSku[]): CategoryFilterOpti
 
   return {
     connectionTypes,
-    wireRanges,
+    currentRatings,
     voltages,
   };
 }
@@ -78,7 +76,7 @@ export function filterCategorySkus(
 ): ProductSku[] {
   const {
     typeFilter,
-    wireRangeFilter,
+    currentRatingFilter,
     voltageFilter,
     pitchFilter = 'All',
     processFilter = 'All',
@@ -87,7 +85,7 @@ export function filterCategorySkus(
 
   return skus.filter((sku) => {
     if (typeFilter !== 'All' && sku.connectionType !== typeFilter) return false;
-    if (wireRangeFilter !== 'All' && sku.wireRangeIec !== wireRangeFilter) return false;
+    if (currentRatingFilter !== 'All' && sku.currentRating !== currentRatingFilter) return false;
     if (voltageFilter !== 'All' && sku.voltageRating !== voltageFilter) return false;
     if (isPcbCategory && pitchFilter !== 'All' && getPitchBand(sku.widthOrPitch) !== pitchFilter) {
       return false;

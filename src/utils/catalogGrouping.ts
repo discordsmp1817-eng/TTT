@@ -86,7 +86,7 @@ export function buildCatalogTopEntries(
       tagline:
         'TS 35 & G 32 control, metering, heavy lug & 1-nut distribution blocks up to 300 A',
       image: IMAGES.heroDinRail,
-      imageAlt: 'TermiCore DIN Rail Terminal Block portfolio mounted on TS 35 rail',
+      imageAlt: 'Termiflux DIN Rail Terminal Block portfolio mounted on TS 35 rail',
       wireRangeSummary: '0.2 – 120 mm²',
       currentMaxSummary: '300 A',
       voltageMaxSummary: '1000 V',

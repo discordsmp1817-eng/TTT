@@ -95,7 +95,7 @@ export async function downloadModelPdfDatasheet(
     doc.setTextColor(255, 255, 255);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);
-    doc.text('TermiCore', margin, 11.5);
+    doc.text('Termiflux', margin, 11.5);
 
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8.5);
@@ -253,7 +253,7 @@ export async function downloadModelPdfDatasheet(
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(7.5);
     doc.text(
-      `TermiCore Industrial Wiring Systems · ${sku.model} Engineering Datasheet · sales@termicore.com`,
+      `Termiflux Industrial Wiring Systems · ${sku.model} Engineering Datasheet · sales@termiflux.com`,
       margin,
       pageHeight - 7
     );
@@ -262,6 +262,6 @@ export async function downloadModelPdfDatasheet(
     });
   }
 
-  const safeFile = `TermiCore-${sku.model.replace(/[^a-zA-Z0-9._-]+/g, '-')}-Datasheet.pdf`;
+  const safeFile = `Termiflux-${sku.model.replace(/[^a-zA-Z0-9._-]+/g, '-')}-Datasheet.pdf`;
   doc.save(safeFile);
 }

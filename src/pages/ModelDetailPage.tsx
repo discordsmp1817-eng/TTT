@@ -278,7 +278,7 @@ export function ModelDetailPage({ sku, category }: ModelDetailPageProps) {
                   {sku.name}
                 </h1>
                 <p className="mt-3 text-sm sm:text-base leading-relaxed text-[#475569]">
-                  Precision {sku.connectionType.toLowerCase()} terminal module engineered in the TermiCore {category.seriesCode} series for {sku.wireRangeIec} conductors, rated up to {sku.currentRating} / {sku.voltageRating} with {sku.mounting} mounting.
+                  Precision {sku.connectionType.toLowerCase()} terminal module engineered in the Termiflux {category.seriesCode} series for {sku.wireRangeIec} conductors, rated up to {sku.currentRating} / {sku.voltageRating} with {sku.mounting} mounting.
                 </p>
 
                 <dl className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3.5 rounded-lg border border-[#DCE2E8] bg-[#F8FAFC] p-4 text-xs">

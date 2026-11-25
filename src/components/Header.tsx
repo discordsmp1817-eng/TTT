@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { TermiCoreLogo } from './TermiCoreLogo';
+import { TermifluxLogo } from './TermiCoreLogo';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -247,12 +247,12 @@ export function Header({ isLoading = false }: { isLoading?: boolean }) {
         ref={headerContainerRef}
         className="relative mx-auto flex h-16 max-w-[1280px] items-center justify-between gap-3 px-4 sm:gap-6 sm:px-6 lg:h-[68px] lg:gap-8"
       >
-        {/* Zone 1: Single-line Brand Wordmark */}
+        {/* Zone 1: Brand Wordmark Logo */}
         <button
           type="button"
           onClick={() => handleNav('/')}
-          className="group flex items-center gap-2.5 sm:gap-3 text-left whitespace-nowrap shrink-0 cursor-pointer rounded"
-          aria-label="TermiCore Home"
+          className="group flex items-center text-left whitespace-nowrap shrink-0 cursor-pointer rounded py-1"
+          aria-label="Termiflux Home"
         >
           <div
             data-navbar-logo
@@ -260,12 +260,11 @@ export function Header({ isLoading = false }: { isLoading?: boolean }) {
               isLoading ? 'opacity-0' : 'opacity-100'
             }`}
           >
-            <TermiCoreLogo className="h-9 w-9 shrink-0 transition-transform duration-300 group-hover:scale-105" />
+            <TermifluxLogo
+              blendOnLight
+              className="h-10 sm:h-11 lg:h-12 w-auto shrink-0 transition-transform duration-300 group-hover:scale-[1.03]"
+            />
           </div>
-          <span className="font-display text-[17px] sm:text-[18px] tracking-[0.04em] uppercase leading-none">
-            <span className="font-extrabold text-[#0F172A]">TERMI</span>
-            <span className="font-semibold text-[#0F766E]">CORE</span>
-          </span>
         </button>
 
         {/* Zone 2: Concise Single-Line Navigation Links (Desktop) */}
@@ -437,7 +436,7 @@ export function Header({ isLoading = false }: { isLoading?: boolean }) {
               <div className="mb-3 flex items-center justify-between border-b border-[#EEF2F6] pb-2.5">
                 <div className="flex items-center gap-3">
                   <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#0F766E]">
-                    TermiCore Connection Architecture
+                    Termiflux Connection Architecture
                   </span>
                   <span className="hidden xl:inline text-xs text-[#475569]">
                     Select a terminal family or jump straight to a series

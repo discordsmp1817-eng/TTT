@@ -164,7 +164,7 @@ async function deliverInquiryEmail(params: {
       });
 
       await transporter.sendMail({
-        from: process.env.SMTP_FROM?.trim() || `"TermiCore Website" <${smtpUser}>`,
+        from: process.env.SMTP_FROM?.trim() || `"Termiflux Website" <${smtpUser}>`,
         to: RECIPIENT_EMAIL,
         replyTo: params.replyTo,
         subject: params.subject,
@@ -193,7 +193,7 @@ async function deliverInquiryEmail(params: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: process.env.RESEND_FROM?.trim() || 'TermiCore Inquiries <onboarding@resend.dev>',
+          from: process.env.RESEND_FROM?.trim() || 'Termiflux Inquiries <onboarding@resend.dev>',
           to: [RECIPIENT_EMAIL],
           reply_to: params.replyTo,
           subject: params.subject,
@@ -234,7 +234,7 @@ async function startServer() {
   app.get('/api/health', (_req: Request, res: Response) => {
     res.json({
       status: 'ok',
-      service: 'termicore-api',
+      service: 'termiflux-api',
       timestamp: new Date().toISOString(),
     });
   });
@@ -556,11 +556,11 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`TermiCore server listening on http://0.0.0.0:${PORT}`);
+    console.log(`Termiflux server listening on http://0.0.0.0:${PORT}`);
   });
 }
 
 startServer().catch((err) => {
-  console.error('Failed to start TermiCore server:', err);
+  console.error('Failed to start Termiflux server:', err);
   process.exit(1);
 });

@@ -316,7 +316,7 @@ export function buildModelSpecificationSections(
     { label: 'Compatible Rail / PCB Interface', value: sku.mounting },
     {
       label: 'Open-Side End Cover Plate',
-      value: isDinRail ? 'Recommended (TermiCore EP Series)' : 'Integrated closed housing',
+      value: isDinRail ? 'Recommended (Termiflux EP Series)' : 'Integrated closed housing',
     },
     {
       label: 'Protective Earth / PE Rail Contact',

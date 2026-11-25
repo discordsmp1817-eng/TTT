@@ -1,5 +1,5 @@
 import { Mail, Phone, MapPin, Clock, ArrowRight, X } from 'lucide-react';
-import { TermiCoreLogo } from './TermiCoreLogo';
+import { TermifluxLogo } from './TermiCoreLogo';
 import { AnimatePresence, motion } from 'motion/react';
 import {
   CONTACT_INFO,
@@ -38,14 +38,10 @@ export function Footer() {
             <button
               type="button"
               onClick={() => handleLink('/')}
-              aria-label="TermiCore Home"
-              className="flex items-center gap-3 text-left cursor-pointer rounded"
+              aria-label="Termiflux Home"
+              className="inline-flex items-center rounded-lg bg-white px-3 py-1.5 shadow-sm text-left cursor-pointer transition-transform duration-200 hover:scale-[1.02]"
             >
-              <TermiCoreLogo className="h-9 w-9 shrink-0" />
-              <span className="font-display text-[18px] tracking-[0.04em] uppercase leading-none">
-                <span className="font-extrabold text-white">TERMI</span>
-                <span className="font-semibold text-[#2DD4BF]">CORE</span>
-              </span>
+              <TermifluxLogo className="h-10 w-auto shrink-0" />
             </button>
 
             <p className="mt-4 text-[13px] leading-relaxed text-[#94A3B8] max-w-xs">
@@ -202,7 +198,7 @@ export function Footer() {
           duration={0.8}
           className="mt-12 border-t border-[#243447] pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#94A3B8]"
         >
-          <div>&copy; {new Date().getFullYear()} TermiCore Industrial Connectivity. All rights reserved.</div>
+          <div>&copy; {new Date().getFullYear()} Termiflux Industrial Connectivity. All rights reserved.</div>
           <div className="flex flex-wrap items-center gap-6">
             <button
               type="button"
@@ -255,7 +251,7 @@ export function Footer() {
                 <h3 id="legal-modal-title" className="font-display text-lg font-bold text-[#0F172A]">
                   {legalModal === 'privacy' && 'Privacy Policy'}
                   {legalModal === 'terms' && 'Terms of Service'}
-                  {legalModal === 'sitemap' && 'TermiCore Site Directory'}
+                  {legalModal === 'sitemap' && 'Termiflux Site Directory'}
                 </h3>
                 <button
                   type="button"
@@ -271,7 +267,7 @@ export function Footer() {
                 {legalModal === 'privacy' && (
                   <>
                     <p>
-                      TermiCore collects contact and technical specification data solely to process engineering inquiries, sample dispatches, and factory-direct quote requests.
+                      Termiflux collects contact and technical specification data solely to process engineering inquiries, sample dispatches, and factory-direct quote requests.
                     </p>
                     <p>
                       For compliance documentation or data inquiries, contact{' '}
@@ -283,7 +279,7 @@ export function Footer() {
                 {legalModal === 'terms' && (
                   <>
                     <p>
-                      All electrical ratings, tightening torques, and wire cross-section tolerances published in TermiCore product tables must be verified by qualified panel builders against applicable IEC 60947-7-1 and UL 1059 installation requirements.
+                      All electrical ratings, tightening torques, and wire cross-section tolerances published in Termiflux product tables must be verified by qualified panel builders against applicable IEC 60947-7-1 and UL 1059 installation requirements.
                     </p>
                     <p>
                       Product specifications are subject to engineering verification at the time of formal quotation.
@@ -306,7 +302,7 @@ export function Footer() {
                       { label: 'PCB Connectors (TPL/TPH)', path: '/pcb-connectors' as RoutePath },
                       { label: 'Barrier Blocks (TBB/TBD)', path: '/barrier-terminal-blocks' as RoutePath },
                       { label: 'Quality & Standards', path: '/quality' as RoutePath },
-                      { label: 'About TermiCore', path: '/about' as RoutePath },
+                      { label: 'About Termiflux', path: '/about' as RoutePath },
                       { label: 'Contact Engineering', path: '/contact' as RoutePath },
                       { label: 'Request a Quote', path: '/quote' as RoutePath },
                     ].map((item) => (

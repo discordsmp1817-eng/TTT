@@ -11,7 +11,7 @@ import {
   splitHighlightParts,
 } from './quoteAutocomplete';
 
-test('catalog index derives exclusively from real TermiCore SKUs and accessories', () => {
+test('catalog index derives exclusively from real Termiflux SKUs and accessories', () => {
   assert.ok(CATALOG_SEARCH_INDEX.length >= 50);
   const tsc25 = CATALOG_SEARCH_INDEX.find((item) => item.model === 'TSC 2.5');
   assert.ok(tsc25);

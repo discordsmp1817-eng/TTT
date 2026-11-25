@@ -104,7 +104,7 @@ export interface HeroMetric {
 }
 
 export const CONTACT_INFO = {
-  email: 'sales@termicore.com',
+  email: 'sales@termiflux.com',
   phone: '+91 20 6724 8900',
   location: 'Pune Industrial Estate, Maharashtra, India',
 };
@@ -164,7 +164,7 @@ export const PRODUCT_NAV_GROUPS: ProductNavGroup[] = [
     seriesBadge: 'TPC · TPS · TPL',
     summary: 'Board-to-wire solder clamps & plugs (2.54–15 mm)',
     image: IMAGES.pcbTerminalBlocks,
-    imageAlt: 'TermiCore PCB terminal blocks mounted on industrial circuit board',
+    imageAlt: 'Termiflux PCB terminal blocks mounted on industrial circuit board',
     route: '/pcb-terminal-blocks',
     items: [
       { label: 'Direct-Solder PCB Clamps', specTag: 'TPC / TPS', route: '/pcb-terminal-blocks', filter: { typeFilter: 'All' } },
@@ -182,7 +182,7 @@ export const PRODUCT_NAV_GROUPS: ProductNavGroup[] = [
     seriesBadge: 'TSC · TSC-R · TSS · TBC · TNC',
     summary: 'TS 35 & G 32 control, metering & feeders up to 300 A',
     image: IMAGES.screwClamp,
-    imageAlt: 'TermiCore DIN-rail screw clamp terminal block cutaway on TS 35 rail',
+    imageAlt: 'Termiflux DIN-rail screw clamp terminal block cutaway on TS 35 rail',
     route: '/products',
     items: [
       { label: 'Spring Cage Connection', specTag: 'TSC', route: '/spring-cage-connection' },
@@ -198,7 +198,7 @@ export const PRODUCT_NAV_GROUPS: ProductNavGroup[] = [
     seriesBadge: 'TBB · TBD',
     summary: 'Insulated barrier strips for fork/ring lugs & panels',
     image: IMAGES.barrierTerminalBlocks,
-    imageAlt: 'TermiCore black PA 6.6 barrier terminal strip with brass captive screws',
+    imageAlt: 'Termiflux black PA 6.6 barrier terminal strip with brass captive screws',
     route: '/barrier-terminal-blocks',
     items: [
       { label: 'Single-Tier Barrier Strips', specTag: 'TBB-SR', route: '/barrier-terminal-blocks', filter: { typeFilter: 'Single-Tier' } },
@@ -242,7 +242,7 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
     description:
       'Engineered with corrosion-resistant CrNi stainless steel leaf springs and electrolytic copper current bars, the TSC Spring Cage series delivers constant contact force across thermal expansion and mechanical shock without periodic re-tightening.',
     image: IMAGES.springCage,
-    imageAlt: 'TermiCore TSC Spring Cage DIN-rail terminal blocks',
+    imageAlt: 'Termiflux TSC Spring Cage DIN-rail terminal blocks',
     wireRangeSummary: '0.2 – 16 mm²',
     currentMaxSummary: '76 A',
     voltageMaxSummary: '800 V',
@@ -504,7 +504,7 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
     description:
       'The TSC-R Screw Clamp series combines high-torque steel clamping yokes with an integrated Reakdyn anti-vibration slot, ensuring permanent clamping integrity from 0.2 mm² PLC signals to 35 mm² motor feeders.',
     image: IMAGES.screwClamp,
-    imageAlt: 'TermiCore TSC-R Screw Clamp DIN-rail terminal blocks',
+    imageAlt: 'Termiflux TSC-R Screw Clamp DIN-rail terminal blocks',
     wireRangeSummary: '0.2 – 35 mm²',
     currentMaxSummary: '125 A',
     voltageMaxSummary: '1000 V',
@@ -696,7 +696,7 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
     description:
       'The TSS Spring Support series pairs captive screw clamping with internal spring-loaded pressure plates and longitudinal disconnect sliders, ideal for current transformer (CT) secondary loops, voltage transformers, and high-vibration switchgear panels.',
     image: IMAGES.skuDisconnect,
-    imageAlt: 'TermiCore TSS Spring Support and CT/PT disconnect terminal blocks',
+    imageAlt: 'Termiflux TSS Spring Support and CT/PT disconnect terminal blocks',
     wireRangeSummary: '0.2 – 10 mm²',
     currentMaxSummary: '57 A',
     voltageMaxSummary: '800 V',
@@ -841,7 +841,7 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
     description:
       'Designed for high-current main incoming feeders, transformer terminations, and switchgear busbars, TBC and TBH stud blocks clamp crimped ring and fork lugs directly onto solid copper current bars with captive nuts and hinged IP20 safety shrouds.',
     image: IMAGES.boltPower,
-    imageAlt: 'TermiCore TBC Bolt Stud high-power DIN-rail terminal blocks',
+    imageAlt: 'Termiflux TBC Bolt Stud high-power DIN-rail terminal blocks',
     wireRangeSummary: '6.0 – 120 mm²',
     currentMaxSummary: '300 A',
     voltageMaxSummary: '1000 V',
@@ -998,9 +998,9 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
     classification: 'DIN Rail · Distribution',
     tagline: 'Compact 1-incoming to multi-outgoing power distribution blocks saving DIN-rail space.',
     description:
-      'TermiCore TNC and TNO distribution blocks split a single heavy main feeder into 2 to 8 balanced branch circuits inside one finger-safe IP20 housing, eliminating bulky copper busbar fabrication and external cross-jumpers.',
+      'Termiflux TNC and TNO distribution blocks split a single heavy main feeder into 2 to 8 balanced branch circuits inside one finger-safe IP20 housing, eliminating bulky copper busbar fabrication and external cross-jumpers.',
     image: IMAGES.nutDistribution,
-    imageAlt: 'TermiCore TNC 1-Nut power distribution terminal blocks',
+    imageAlt: 'Termiflux TNC 1-Nut power distribution terminal blocks',
     wireRangeSummary: '1.5 – 120 mm²',
     currentMaxSummary: '269 A',
     voltageMaxSummary: '1000 V',
@@ -1145,7 +1145,7 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
     description:
       'Engineered for power electronics, VFD drives, solar inverters, and PLC I/O boards, TPC and TPS direct-mount PCB blocks span micro 2.54 mm signal pitches to 232 A / 1000 V power clamps with wave-solder THT and 260°C reflow THR housings.',
     image: IMAGES.pcbTerminalBlocks,
-    imageAlt: 'TermiCore TPC and TPS direct-solder PCB terminal blocks',
+    imageAlt: 'Termiflux TPC and TPS direct-solder PCB terminal blocks',
     wireRangeSummary: '0.14 – 95 mm²',
     currentMaxSummary: '232 A',
     voltageMaxSummary: '1000 V',
@@ -1388,7 +1388,7 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
     description:
       'Modular plug-and-header systems allow sub-assemblies and control boards to be pre-wired off-board and snapped into place during final commissioning, featuring coding keys, M2.5/M3 screw flanges, and Lock-and-Release latches.',
     image: IMAGES.pcbConnectors,
-    imageAlt: 'TermiCore TPL and TPH pluggable PCB connectors and headers',
+    imageAlt: 'Termiflux TPL and TPH pluggable PCB connectors and headers',
     wireRangeSummary: '0.14 – 35 mm²',
     currentMaxSummary: '125 A',
     voltageMaxSummary: '1000 V',
@@ -1573,9 +1573,9 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
     classification: 'Panel & PCB · Barrier',
     tagline: 'Rugged insulated barrier strips in single-row, bi-level, pluggable, and panel-mount configurations.',
     description:
-      'Built for heavy-duty HVAC, power supply, industrial control, and field-wiring enclosures, TermiCore TBB and TBD barrier terminal blocks pair high-wall UL 94 V-0 polyamide insulation with captive washer screws for fork lugs, ring terminals, and stripped copper wire.',
+      'Built for heavy-duty HVAC, power supply, industrial control, and field-wiring enclosures, Termiflux TBB and TBD barrier terminal blocks pair high-wall UL 94 V-0 polyamide insulation with captive washer screws for fork lugs, ring terminals, and stripped copper wire.',
     image: IMAGES.barrierTerminalBlocks,
-    imageAlt: 'TermiCore TBB and TBD barrier terminal blocks in single row, bi-level, and panel styles',
+    imageAlt: 'Termiflux TBB and TBD barrier terminal blocks in single row, bi-level, and panel styles',
     wireRangeSummary: '0.5 – 25 mm²',
     currentMaxSummary: '85 A',
     voltageMaxSummary: '600 V',
@@ -1766,7 +1766,7 @@ export const ACCESSORIES: AccessoryItem[] = [
     description:
       'Snap-on UL 94 V-0 polyamide end covers that seal the open live side of terminal block assemblies for IP20 finger safety.',
     image: 'images/acc_end_plates_1794643969735.jpg',
-    imageAlt: 'TermiCore EP Series snap-on terminal block end plates',
+    imageAlt: 'Termiflux EP Series snap-on terminal block end plates',
     specs: [
       { label: 'Thickness', value: '1.5 - 2.2 mm' },
       { label: 'Material', value: 'PA 6.6 UL 94 V-0' },
@@ -1782,7 +1782,7 @@ export const ACCESSORIES: AccessoryItem[] = [
     description:
       'Extended-profile separating plates for visual circuit grouping and increased creepage/clearance between differing voltage potentials.',
     image: 'images/acc_partition_plates_1794643970225.jpg',
-    imageAlt: 'TermiCore PP Series high-voltage partition plates',
+    imageAlt: 'Termiflux PP Series high-voltage partition plates',
     specs: [
       { label: 'Thickness', value: '2.0 mm' },
       { label: 'Dielectric', value: '1000 V Isolation' },
@@ -1798,7 +1798,7 @@ export const ACCESSORIES: AccessoryItem[] = [
     description:
       'Finger-safe copper cross-connecting bridges in 2-pole, 4-pole, and 10-pole configurations for rapid common busing.',
     image: 'images/acc_cross_jumpers_1794643971235.jpg',
-    imageAlt: 'TermiCore insulated plug-in and screw cross jumpers',
+    imageAlt: 'Termiflux insulated plug-in and screw cross jumpers',
     specs: [
       { label: 'Poles', value: '2 / 3 / 4 / 10 / 20 Way' },
       { label: 'Rated Current', value: '24 A - 76 A' },
@@ -1814,7 +1814,7 @@ export const ACCESSORIES: AccessoryItem[] = [
     description:
       'Snap-in white polyamide marking strips and pre-printed terminal tags compatible with thermal transfer and plotter printers.',
     image: 'images/acc_marking_tags_1794643971909.jpg',
-    imageAlt: 'TermiCore MT and TM series terminal block marking tags',
+    imageAlt: 'Termiflux MT and TM series terminal block marking tags',
     specs: [
       { label: 'Pitch Match', value: '5.2 / 6.2 / 8.2 mm' },
       { label: 'Print Type', value: 'Thermal / Plotter' },
@@ -1830,7 +1830,7 @@ export const ACCESSORIES: AccessoryItem[] = [
     description:
       'Cold-rolled galvanized steel and aluminum DIN rails in slotted and unslotted 1 m / 2 m lengths per EN 60715.',
     image: 'images/acc_din_rails_1794643971282.jpg',
-    imageAlt: 'TermiCore TS 35 and G 32 DIN mounting rails',
+    imageAlt: 'Termiflux TS 35 and G 32 DIN mounting rails',
     specs: [
       { label: 'Profiles', value: 'TS 35×7.5 / 35×15 / G32' },
       { label: 'Finish', value: 'Trivalent Zinc-Plated' },
@@ -1846,7 +1846,7 @@ export const ACCESSORIES: AccessoryItem[] = [
     description:
       'Shrouded 2 mm and 4 mm test adapters and reducing sockets for live multimeter probing on disconnect and feed-through blocks.',
     image: 'images/acc_test_plugs_1794643972356.jpg',
-    imageAlt: 'TermiCore TP and PS series test plugs and sockets',
+    imageAlt: 'Termiflux TP and PS series test plugs and sockets',
     specs: [
       { label: 'Probe Diameter', value: '2.0 mm / 4.0 mm' },
       { label: 'Rated Current', value: 'Up to 32 A' },
@@ -1862,7 +1862,7 @@ export const ACCESSORIES: AccessoryItem[] = [
     description:
       'Electrolytic tinned copper ring, fork, and pin cable lugs engineered for TBC/TBH bolt terminals and heavy feeder crimping.',
     image: 'images/acc_cable_lug_1794729919569.jpg',
-    imageAlt: 'TermiCore tinned copper ring and fork cable lugs',
+    imageAlt: 'Termiflux tinned copper ring and fork cable lugs',
     specs: [
       { label: 'Cross-Section', value: '0.5 - 120 mm²' },
       { label: 'Stud Sizes', value: 'M4 - M12' },
@@ -1880,7 +1880,7 @@ export const APPLICATION_SECTORS: ApplicationSector[] = [
     summary:
       'Modular DIN-rail blocks and pluggable PCB headers engineered for compact PLC I/O marshalling, sensor distribution, and clean cabinet serviceability.',
     image: IMAGES.springCage,
-    imageAlt: 'Standalone matte gray TermiCore TSC spring-cage DIN-rail terminal block',
+    imageAlt: 'Standalone matte gray Termiflux TSC spring-cage DIN-rail terminal block',
     demands: [
       '5.2 mm slim profile maximizes DIN-rail I/O channel density',
       'Color-coded cross jumpers simplify 24 V DC common distribution',
@@ -1935,7 +1935,7 @@ export const APPLICATION_SECTORS: ApplicationSector[] = [
     summary:
       'Self-locking CrNi spring clamps and Reakdyn anti-loosening screw yokes tested against continuous mechanical vibration and thermal cycling.',
     image: IMAGES.pcbConnectors,
-    imageAlt: 'Standalone matte black TermiCore TPL pluggable PCB terminal connector',
+    imageAlt: 'Standalone matte black Termiflux TPL pluggable PCB terminal connector',
     demands: [
       'Zero conductor loosening under continuous shock and vibration',
       'Gas-tight contact zone prevents millivolt drift in humid enclosures',
@@ -1983,7 +1983,7 @@ export const CERTIFICATIONS: CertificationItem[] = [
     title: 'Low Voltage Directive Compliance',
     description:
       'Full conformity with EU Low Voltage Directive 2014/35/EU for safe deployment in industrial machinery and switchgear.',
-    scope: 'All TermiCore DIN & PCB Lines',
+    scope: 'All Termiflux DIN & PCB Lines',
   },
   {
     id: 'rohs-reach',

@@ -33,7 +33,7 @@ const STARTER_POOL: Omit<NoteSuggestion, 'mode'>[] = [
   {
     id: 'i-had-cross-ref',
     label: 'I had another brand / need equivalent',
-    text: 'I had previously specified another terminal block brand and need an equivalent TermiCore cross-reference.',
+    text: 'I had previously specified another terminal block brand and need an equivalent Termiflux cross-reference.',
     keywords: ['i had', 'had', 'previous', 'equiv', 'cross', 'replace', 'alternative'],
   },
   {

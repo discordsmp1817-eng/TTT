@@ -244,8 +244,8 @@ export function HomePage() {
                 >
                   <EngineeringImage
                     src={IMAGES.heroDinRail}
-                    alt="TermiCore DIN rail terminal blocks cutaway showing spring and copper busbar engineering"
-                    fallbackTitle="TermiCore TS 35 DIN Rail Assembly"
+                    alt="Termiflux DIN rail terminal blocks cutaway showing spring and copper busbar engineering"
+                    fallbackTitle="Termiflux TS 35 DIN Rail Assembly"
                     priority
                     className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.03]"
                   />
@@ -531,12 +531,12 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* 5. WHY CHOOSE TERMICORE + CONVERSION BAND */}
+      {/* 5. WHY CHOOSE TERMIFLUX + CONVERSION BAND */}
       <section className="bg-[#F5F7F9] py-16 lg:py-24">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
           <RevealBlock direction="up" distance={78} className="max-w-2xl mb-10">
             <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
-              Why Choose TermiCore
+              Why Choose Termiflux
             </p>
             <h2 className="mt-2 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-[#101D2B] text-balance">
               Trusted by Professionals Worldwide

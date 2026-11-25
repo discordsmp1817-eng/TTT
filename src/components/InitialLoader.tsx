@@ -5,7 +5,7 @@
 
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { TermiCoreLogo } from './TermiCoreLogo';
+import { TermifluxLogo } from './TermiCoreLogo';
 import { computeLogoFlightTransform } from '../utils/scrollReveal';
 
 export function InitialLoader({ onComplete }: { onComplete: () => void }) {
@@ -74,9 +74,9 @@ export function InitialLoader({ onComplete }: { onComplete: () => void }) {
           ? targetEl.getBoundingClientRect()
           : {
               left: 24,
-              top: 16,
-              width: 36,
-              height: 36,
+              top: 10,
+              width: 144,
+              height: 48,
             };
         const flight = computeLogoFlightTransform(startRect, targetRect);
         const eased = easeInOut(flightProxy.progress);
@@ -135,15 +135,15 @@ export function InitialLoader({ onComplete }: { onComplete: () => void }) {
         aria-hidden="true"
       />
 
-      {/* Centered TermiCore logo rendered immediately for FCP before flying to [data-navbar-logo] */}
+      {/* Centered Termiflux logo rendered immediately for FCP before flying to [data-navbar-logo] */}
       <div
         ref={logoWrapRef}
         role="img"
-        aria-label="TermiCore"
+        aria-label="Termiflux"
         data-testid="loader-flying-logo"
-        className="relative z-10 flex h-24 w-24 items-center justify-center will-change-transform"
+        className="relative z-10 flex items-center justify-center rounded-2xl bg-white px-6 py-4 shadow-[0_24px_60px_rgba(0,0,0,0.45)] will-change-transform"
       >
-        <TermiCoreLogo className="h-24 w-24" />
+        <TermifluxLogo className="h-20 sm:h-24 w-auto" />
       </div>
     </div>
   );

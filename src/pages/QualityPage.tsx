@@ -25,7 +25,7 @@ export function QualityPage() {
               Uncompromising Quality &amp; Safety
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#475569]">
-              Every TermiCore terminal block undergoes rigorous testing for thermal stability, mechanical retention, and dielectric insulation to meet international electrical engineering standards.
+              Every Termiflux terminal block undergoes rigorous testing for thermal stability, mechanical retention, and dielectric insulation to meet international electrical engineering standards.
             </p>
             <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold text-[#101D2B]">
               <span>Dielectric Tested</span>
@@ -45,8 +45,8 @@ export function QualityPage() {
           >
             <EngineeringImage
               src={IMAGES.heroDinRail}
-              alt="TermiCore cutaway terminal block quality inspection"
-              fallbackTitle="TermiCore Quality Engineering"
+              alt="Termiflux cutaway terminal block quality inspection"
+              fallbackTitle="Termiflux Quality Engineering"
               className="h-full w-full object-cover"
             />
           </ImageReveal>

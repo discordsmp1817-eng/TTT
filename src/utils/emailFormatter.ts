@@ -62,7 +62,7 @@ export function formatItemsSummary(items: EmailLineItem[]): string {
 }
 
 export function buildQuoteEmailContent(payload: QuoteEmailPayload) {
-  const subject = `[TermiCore Quote ${payload.referenceId}] ${payload.company} — ${payload.name}`;
+  const subject = `[Termiflux Quote ${payload.referenceId}] ${payload.company} — ${payload.name}`;
   const itemsText = formatItemsSummary(payload.items);
 
   const text = [
@@ -99,7 +99,7 @@ export function buildQuoteEmailContent(payload: QuoteEmailPayload) {
     <div style="font-family:Arial,Helvetica,sans-serif;max-width:680px;margin:0 auto;color:#0f172a;line-height:1.5;">
       <div style="background:#0f766e;color:#ffffff;padding:18px 24px;border-radius:8px 8px 0 0;">
         <div style="font-size:12px;opacity:0.9;font-family:monospace;">Reference: ${escapeHtml(payload.referenceId)}</div>
-        <h2 style="margin:4px 0 0;font-size:20px;">New TermiCore Quote Request</h2>
+        <h2 style="margin:4px 0 0;font-size:20px;">New Termiflux Quote Request</h2>
       </div>
       <div style="border:1px solid #e2e8f0;border-top:none;padding:24px;border-radius:0 0 8px 8px;background:#ffffff;">
         <table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:14px;">
@@ -131,7 +131,7 @@ export function buildQuoteEmailContent(payload: QuoteEmailPayload) {
 }
 
 export function buildContactEmailContent(payload: ContactEmailPayload) {
-  const subject = `[TermiCore Contact ${payload.referenceId}] ${payload.subject} — ${payload.name}`;
+  const subject = `[Termiflux Contact ${payload.referenceId}] ${payload.subject} — ${payload.name}`;
 
   const text = [
     `New Technical Contact Inquiry (${payload.referenceId})`,
@@ -169,7 +169,7 @@ export function buildContactEmailContent(payload: ContactEmailPayload) {
 }
 
 export function buildRfqEmailContent(payload: RfqEmailPayload) {
-  const subject = `[TermiCore Quick RFQ ${payload.referenceId}] ${payload.company} (${payload.totalUnits} pcs)`;
+  const subject = `[Termiflux Quick RFQ ${payload.referenceId}] ${payload.company} (${payload.totalUnits} pcs)`;
   const itemsText = formatItemsSummary(payload.items);
 
   const text = [
@@ -248,7 +248,7 @@ export function buildWeb3FormsPayload(params: {
     access_key: params.accessKey,
     subject: params.subject,
     name: params.fromName,
-    from_name: 'TermiCore Inquiry Desk',
+    from_name: 'Termiflux Inquiry Desk',
     email: params.replyTo,
     replyto: params.replyTo,
     message: params.message,

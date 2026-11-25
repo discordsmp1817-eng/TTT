@@ -7,7 +7,7 @@ import {
 } from '../data/termicoreData';
 import { searchCatalogProducts } from './quoteAutocomplete';
 
-test('PRODUCT_NAV_GROUPS defines all 3 TermiCore product families with original labels and valid images', () => {
+test('PRODUCT_NAV_GROUPS defines all 3 Termiflux product families with original labels and valid images', () => {
   assert.equal(PRODUCT_NAV_GROUPS.length, 3);
   assert.deepEqual(
     PRODUCT_NAV_GROUPS.map((g) => g.title),
@@ -36,7 +36,7 @@ test('PRODUCT_NAV_GROUPS defines all 3 TermiCore product families with original 
   );
 });
 
-test('Barrier Terminal Blocks category includes all 6 TermiCore structural variants and searchable SKUs', () => {
+test('Barrier Terminal Blocks category includes all 6 Termiflux structural variants and searchable SKUs', () => {
   const barrierCat = PRODUCT_CATEGORIES.find((c) => c.id === 'barrier-terminal-blocks');
   assert.ok(barrierCat);
   assert.equal(barrierCat.slug, '/barrier-terminal-blocks');

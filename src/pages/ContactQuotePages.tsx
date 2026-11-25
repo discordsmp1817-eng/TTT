@@ -96,7 +96,7 @@ export function ContactPage() {
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
         <RevealBlock direction="up" distance={44} className="max-w-2xl mb-10" blur>
           <p className="font-mono text-xs font-semibold tracking-wide text-[#0F766E]">
-            Contact TermiCore
+            Contact Termiflux
           </p>
           <h1 className="mt-2 font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#101D2B] text-balance">
             Let&apos;s Discuss Your Next Project
@@ -452,7 +452,7 @@ export function QuotePage() {
           <RevealBlock direction="left" distance={56} className="order-2 lg:order-1 lg:col-span-5 space-y-6">
             <GlowCard variant="elevated" className="p-7 border-[#DCE2E8]">
               <h2 className="font-display text-lg font-bold text-[#101D2B]">
-                Why Choose TermiCore?
+                Why Choose Termiflux?
               </h2>
               <div className="mt-5 space-y-4 text-sm">
                 {[
@@ -570,7 +570,7 @@ export function QuotePage() {
                         Accessories — DIN Rail &amp; Panel Hardware (7 products)
                       </option>
                       <option value="ALL">
-                        All Series — Entire TermiCore Catalog (80 products)
+                        All Series — Entire Termiflux Catalog (80 products)
                       </option>
                     </select>
                     {seriesSelect !== 'ALL' && seriesSelect !== 'ACCESSORIES' && (

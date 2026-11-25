@@ -4,7 +4,7 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 export default defineConfig(({ command }) => {
-  const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1] || 'TermiCore';
+  const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1] || 'Termiflux';
   const base =
     command === 'serve'
       ? '/'

@@ -94,7 +94,7 @@ test('buildMailtoHref creates encoded mailto link', () => {
 test('buildWeb3FormsPayload constructs clean relay JSON fields', () => {
   const payload = buildWeb3FormsPayload({
     accessKey: 'w3f-test-key',
-    subject: '[TermiCore Contact INQ-1] Sample',
+    subject: '[Termiflux Contact INQ-1] Sample',
     fromName: 'Aarav Patel',
     replyTo: 'aarav@example.com',
     message: 'Need TSC 4 samples',
@@ -102,7 +102,7 @@ test('buildWeb3FormsPayload constructs clean relay JSON fields', () => {
   });
   assert.equal(payload.access_key, 'w3f-test-key');
   assert.equal(payload.name, 'Aarav Patel');
-  assert.equal(payload.from_name, 'TermiCore Inquiry Desk');
+  assert.equal(payload.from_name, 'Termiflux Inquiry Desk');
   assert.equal(payload.email, 'aarav@example.com');
   assert.equal(payload.replyto, 'aarav@example.com');
   assert.equal(payload.Reference_ID, 'INQ-1');

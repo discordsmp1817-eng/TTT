@@ -64,7 +64,7 @@ export async function relayViaWeb3Forms(
       ),
     });
   } catch (err) {
-    console.error('[TermiCore Web3Forms] Network error:', err);
+    console.error('[Termiflux Web3Forms] Network error:', err);
     throw new Error('Unable to reach Web3Forms right now. Please check your connection and try again.');
   }
 
@@ -75,7 +75,7 @@ export async function relayViaWeb3Forms(
 
   if (!res.ok || data.success !== true) {
     const reason = data.message || `HTTP ${res.status}`;
-    console.error('[TermiCore Web3Forms] Submission rejected:', res.status, reason);
+    console.error('[Termiflux Web3Forms] Submission rejected:', res.status, reason);
     throw new Error(
       data.message
         ? `Unable to send inquiry (${data.message}).`

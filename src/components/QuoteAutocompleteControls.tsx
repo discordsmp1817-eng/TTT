@@ -280,7 +280,7 @@ export function ProductAutocomplete({
                   ? `${matches.length} of ${activeSeriesMeta?.productCount ?? matches.length} matching in ${activeSeriesMeta?.title ?? 'Catalog'}`
                   : activeSeriesMeta
                   ? `${activeSeriesMeta.title} (${activeSeriesMeta.code}) — All ${matches.length} products`
-                  : `TermiCore Catalog — ${matches.length} products`}
+                  : `Termiflux Catalog — ${matches.length} products`}
               </span>
               <span className="hidden sm:inline font-mono text-[#64748B]">↑↓ Navigate · Enter Add</span>
             </div>
@@ -290,7 +290,7 @@ export function ProductAutocomplete({
                 ref={listRef}
                 id={listboxId}
                 role="listbox"
-                aria-label="TermiCore matching products"
+                aria-label="Termiflux matching products"
                 data-lenis-prevent
                 className="max-h-[420px] overflow-y-auto divide-y divide-slate-100"
               >
@@ -356,7 +356,7 @@ export function ProductAutocomplete({
               </ul>
             ) : (
               <div className="px-4 py-4 text-xs text-[#64748B]">
-                No matching products in {activeSeriesMeta?.title ?? 'the TermiCore catalogue'} for &ldquo;{query.trim()}&rdquo;. Clear the search text or select another series above.
+                No matching products in {activeSeriesMeta?.title ?? 'the Termiflux catalogue'} for &ldquo;{query.trim()}&rdquo;. Clear the search text or select another series above.
               </div>
             )}
           </motion.div>

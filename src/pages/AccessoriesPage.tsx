@@ -158,7 +158,7 @@ export function AccessoriesPage() {
             Terminal Block Accessories
           </h1>
           <p className="mt-4 max-w-2xl text-base text-[#475569]">
-            Every end plate, partition wall, cross jumper, mating connector, cable lug, ferrule, marking tag, DIN rail, and test plug engineered for TermiCore DIN rail, PCB, and barrier terminal blocks.
+            Every end plate, partition wall, cross jumper, mating connector, cable lug, ferrule, marking tag, DIN rail, and test plug engineered for Termiflux DIN rail, PCB, and barrier terminal blocks.
           </p>
 
           {/* CategoryDetailPage-style Horizontal 3-Select Filter Bar + Grid/Table Switcher */}
@@ -634,7 +634,7 @@ export function AccessoriesPage() {
                 No Accessories Matched Your Filter
               </h2>
               <p className="mt-1.5 text-sm text-[#475569]">
-                Clear your search or switch back to all categories to view every TermiCore accessory.
+                Clear your search or switch back to all categories to view every Termiflux accessory.
               </p>
               <button
                 type="button"
